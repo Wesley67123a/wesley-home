@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="application-name" content="Wesley">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Wesley">
+<meta name="theme-color" content="#FAF4EC">
+<title>Wesley</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --accent:#F47B5B;
+  --accent-rgb:244,123,91;
+  --accent-deep:#D85D3E;
+  --accent-soft:rgba(244,123,91,.16);
+  --bg:#F7F3EE;
+  --text:#1F2328;
+  --muted:#6A707A;
+  --glass:rgba(255,255,255,.58);
+  --glass-strong:rgba(255,255,255,.76);
+  --glass-border:rgba(255,255,255,.72);
+  --shadow:0 16px 40px rgba(31,35,40,.08);
+  --radius:26px;
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --smooth:cubic-bezier(.22,1,.36,1);
+}
+*,*::before,*::after,html,body,h1,h2,h3,h4,h5,h6,b,strong,button,input,select,textarea{
+  box-sizing:border-box;
+  font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-weight:400 !important;
+  -webkit-tap-highlight-color:transparent;
+}
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+  touch-action:manipulation;
+}
+button{border:none;background:none;color:inherit;cursor:pointer;padding:0;font:inherit;}
+input{font:inherit;color:inherit;}
+.glass{
+  background:var(--glass);
+  backdrop-filter:blur(26px) saturate(165%);
+  -webkit-backdrop-filter:blur(26px) saturate(165%);
+  border:1px solid var(--glass-border);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.75);
+}
+.wallpaper{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  pointer-events:none;
+  background:radial-gradient(circle at 20% 20%,rgba(var(--accent-rgb),.14),transparent 55%),linear-gradient(145deg,#FBF7F2 0%,#F2EDE7 50%,#EAE6F0 100%);
+}
+.blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(85px);
+  -webkit-filter:blur(85px);
+  opacity:.62;
+  will-change:transform;
+  transition:background .8s var(--smooth);
+}
+.blob-1{
+  width:52vw;height:52vw;max-width:680px;max-height:680px;
+  top:-14%;left:-10%;
+  background:radial-gradient(circle,rgba(var(--accent-rgb),.55),rgba(var(--accent-rgb),.08) 70%);
+  animation:floatA 18s ease-in-out infinite alternate;
+}
+.blob-2{
+  width:46vw;height:46vw;max-width:600px;max-height:600px;
+  top:18%;right:-10%;
+  background:radial-gradient(circle,rgba(95,158,126,.42),rgba(74,144,217,.12) 70%);
+  animation:floatB 22s ease-in-out infinite alternate;
+}
+.blob-3{
+  width:48vw;height:48vw;max-width:620px;max-height:620px;
+  bottom:-18%;left:22%;
+  background:radial-gradient(circle,rgba(var(--accent-rgb),.36),rgba(139,108,226,.22) 70%);
+  animation:floatC 25s ease-in-out infinite alternate;
+}
+@keyframes floatA{0%{transform:translate3d(0,0,0) scale(1)}100%{transform:translate3d(8vw,6vh,0) scale(1.12)}}
+@keyframes floatB{0%{transform:translate3d(0,0,0) scale(1.05)}100%{transform:translate3d(-9vw,8vh,0) scale(.94)}}
+@keyframes floatC{0%{transform:translate3d(0,0,0) scale(.96)}100%{transform:translate3d(6vw,-7vh,0) scale(1.1)}}
+
+.app-shell{
+  position:relative;
+  z-index:1;
+  display:flex;
+  min-height:100vh;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.sidebar{
+  width:248px;
+  flex-shrink:0;
+  margin:18px 0 18px 18px;
+  border-radius:30px;
+  padding:22px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  position:sticky;
+  top:calc(18px + env(safe-area-inset-top));
+  height:calc(100vh - 36px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  transition:transform .42s var(--smooth);
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:6px 10px 20px;
+}
+.brand-mark{
+  width:38px;height:38px;border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),rgba(var(--accent-rgb),.72));
+  color:#fff;
+  display:grid;place-items:center;
+  box-shadow:0 8px 20px rgba(var(--accent-rgb),.28);
+}
+.brand-title{font-size:20px;letter-spacing:-.02em;}
+.nav-list{display:flex;flex-direction:column;gap:6px;}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;border-radius:16px;
+  color:var(--muted);
+  transition:background .25s,color .25s,transform .35s var(--spring);
+  text-align:left;width:100%;
+}
+.nav-item:hover{background:rgba(255,255,255,.55);color:var(--text);transform:translateX(2px);}
+.nav-item.active{
+  background:var(--glass-strong);
+  color:var(--text);
+  box-shadow:0 6px 18px rgba(31,35,40,.06),inset 0 0 0 1px rgba(var(--accent-rgb),.28);
+}
+.nav-item.active svg{color:var(--accent);}
+.profile-card{
+  display:flex;align-items:center;gap:11px;
+  padding:12px;border-radius:20px;
+  background:rgba(255,255,255,.52);
+  border:1px solid rgba(255,255,255,.7);
+}
+.avatar{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),rgba(var(--accent-rgb),.65));
+  color:#fff;display:grid;place-items:center;font-size:16px;flex-shrink:0;
+}
+.profile-meta{min-width:0;}
+.profile-name{font-size:14px;color:var(--text);}
+.profile-handle{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.main{
+  flex:1;
+  min-width:0;
+  padding:18px 24px 36px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.top-left{display:flex;align-items:center;gap:10px;}
+.menu-btn{
+  width:40px;height:40px;border-radius:14px;
+  display:none;place-items:center;
+}
+.crumb-pill{
+  display:flex;align-items:center;gap:8px;
+  padding:9px 16px;border-radius:999px;font-size:14px;
+}
+.crumb-sep{color:var(--muted);opacity:.6;}
+.top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.pill-btn{
+  display:flex;align-items:center;gap:7px;
+  height:40px;padding:0 14px;border-radius:999px;
+  font-size:13px;
+  transition:transform .3s var(--spring),background .25s;
+}
+.pill-btn:active{transform:scale(.95);}
+.accent-pill{
+  display:flex;align-items:center;gap:7px;
+  height:40px;padding:0 12px;border-radius:999px;
+}
+.dot{
+  width:18px;height:18px;border-radius:50%;
+  position:relative;transition:transform .35s var(--spring),box-shadow .25s;
+  border:2px solid rgba(255,255,255,.85);
+}
+.dot:hover{transform:scale(1.16);}
+.dot.active{transform:scale(1.2);box-shadow:0 0 0 2px var(--text);}
+.dot-rainbow{
+  background:conic-gradient(#F47B5B,#E59A38,#5F9E7E,#4A90D9,#8B6CE2,#F47B5B);
+  overflow:hidden;
+}
+.dot-rainbow input[type=color]{
+  position:absolute;inset:-6px;width:30px;height:30px;opacity:0;cursor:pointer;
+}
+.search-pill{
+  height:40px;padding:0 14px;border-radius:999px;
+  display:flex;align-items:center;gap:10px;
+  min-width:168px;justify-content:space-between;
+  color:var(--muted);font-size:13px;
+  transition:transform .3s var(--spring);
+}
+.search-pill:hover{transform:translateY(-1px);}
+.kbd{
+  padding:2px 7px;border-radius:8px;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(31,35,40,.08);
+  font-size:11px;color:var(--text);
+}
+.top-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),rgba(var(--accent-rgb),.68));
+  color:#fff;display:grid;place-items:center;font-size:15px;
+  box-shadow:0 8px 18px rgba(var(--accent-rgb),.26);
+}
+
+.greeting-row{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:2px 4px;
+}
+.greeting-title{font-size:clamp(26px,3.2vw,34px);letter-spacing:-.025em;margin:0;line-height:1.18;}
+.greeting-sub{font-size:14px;color:var(--muted);margin:6px 0 0;}
+
+.bento-top{
+  display:grid;
+  grid-template-columns:1.35fr 1fr;
+  gap:18px;
+}
+.hero-card{
+  border-radius:30px;
+  padding:26px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  min-height:276px;
+  background:linear-gradient(135deg,rgba(var(--accent-rgb),.22) 0%,rgba(255,255,255,.64) 55%,rgba(var(--accent-rgb),.12) 100%);
+}
+.hero-left{display:flex;flex-direction:column;justify-content:space-between;gap:18px;z-index:1;min-width:0;}
+.hero-chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 13px;border-radius:999px;
+  background:rgba(255,255,255,.68);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.8);
+  font-size:13px;
+}
+.clock-digits{
+  font-size:clamp(40px,5vw,60px);
+  letter-spacing:-.03em;
+  line-height:1;
+  font-variant-numeric:tabular-nums;
+}
+.clock-full-date{font-size:15px;color:var(--muted);margin-top:8px;}
+.hero-right{
+  width:196px;height:196px;flex-shrink:0;
+  display:grid;place-items:center;position:relative;
+}
+.orbital-svg{width:100%;height:100%;overflow:visible;}
+.orbit-center-w{
+  position:absolute;
+  width:56px;height:56px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),rgba(var(--accent-rgb),.78));
+  color:#fff;display:grid;place-items:center;font-size:22px;
+  box-shadow:0 0 28px rgba(var(--accent-rgb),.58),inset 0 1px 2px rgba(255,255,255,.6);
+}
+
+.mini-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+}
+.mini-card{
+  border-radius:24px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:131px;
+  position:relative;
+  transition:transform .38s var(--spring),box-shadow .3s;
+  cursor:pointer;
+}
+.mini-card:hover{transform:translateY(-3px);}
+.mini-card:active{transform:scale(.97);}
+.mini-peach{
+  background:linear-gradient(145deg,rgba(255,220,198,.82),rgba(255,240,228,.66));
+  border-color:rgba(255,255,255,.85);
+}
+.mini-top{display:flex;align-items:center;justify-content:space-between;}
+.mini-icon{
+  width:38px;height:38px;border-radius:13px;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.85);
+}
+.mini-arrow{
+  width:28px;height:28px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.55);
+  color:var(--text);
+}
+.mini-label{font-size:12px;color:var(--muted);margin-top:12px;}
+.mini-value{font-size:17px;margin-top:3px;display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.bento-bottom{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+.data-card{
+  border-radius:28px;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.card-title{font-size:17px;margin:0;}
+.card-sub{font-size:12px;color:var(--muted);margin:3px 0 0;}
+.seg-switch{
+  display:inline-flex;padding:3px;border-radius:999px;
+  background:rgba(255,255,255,.56);border:1px solid rgba(255,255,255,.8);
+}
+.seg-btn{
+  padding:5px 13px;border-radius:999px;font-size:12px;color:var(--muted);
+  transition:background .25s,color .25s;
+}
+.seg-btn.active{background:#fff;color:var(--text);box-shadow:0 3px 10px rgba(31,35,40,.08);}
+.bar-chart{
+  height:164px;
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:12px;
+  align-items:end;
+  padding-top:12px;
+}
+.bar-col{display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end;}
+.bar-track{
+  width:100%;max-width:34px;height:126px;border-radius:12px;
+  background:rgba(255,255,255,.45);
+  display:flex;align-items:flex-end;overflow:hidden;
+  border:1px solid rgba(255,255,255,.65);
+}
+.bar-fill{
+  width:100%;border-radius:10px;
+  background:rgba(31,35,40,.16);
+  transition:height .55s var(--spring),background .35s;
+}
+.bar-fill.peak{
+  background:linear-gradient(180deg,var(--accent),rgba(var(--accent-rgb),.72));
+  box-shadow:0 6px 16px rgba(var(--accent-rgb),.28);
+}
+.bar-day{font-size:12px;color:var(--muted);}
+
+.icon-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.85);
+  display:grid;place-items:center;
+  transition:transform .4s var(--spring);
+}
+.icon-btn:active{transform:rotate(-90deg) scale(.92);}
+.multi-bar{
+  height:14px;border-radius:999px;
+  background:rgba(255,255,255,.5);
+  overflow:hidden;display:flex;gap:3px;padding:2px;
+  border:1px solid rgba(255,255,255,.75);
+}
+.multi-seg{height:100%;border-radius:999px;transition:width .5s var(--spring);}
+.prog-list{display:flex;flex-direction:column;gap:12px;}
+.prog-row{display:flex;flex-direction:column;gap:6px;}
+.prog-meta{display:flex;justify-content:space-between;font-size:13px;}
+.prog-track{height:8px;border-radius:999px;background:rgba(255,255,255,.52);overflow:hidden;}
+.prog-fill{height:100%;border-radius:999px;transition:width .55s var(--spring);}
+
+.draw-panel{
+  border-radius:30px;
+  padding:24px;
+  display:none;
+  flex-direction:column;
+  gap:20px;
+  transform-origin:top center;
+  animation:springIn .48s var(--spring);
+}
+.draw-panel.open{display:flex;}
+@keyframes springIn{0%{opacity:0;transform:scale(.94) translateY(10px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.draw-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.draw-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.subject-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+}
+.subj-card{
+  border-radius:20px;padding:14px 10px;
+  background:rgba(255,255,255,.56);
+  border:1px solid rgba(255,255,255,.8);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:transform .38s var(--spring),box-shadow .25s,opacity .25s,background .25s;
+}
+.subj-card.picking{transform:scale(1.07);box-shadow:0 0 0 2px var(--accent),0 12px 24px rgba(var(--accent-rgb),.24);background:rgba(255,255,255,.88);}
+.subj-card.chosen{transform:scale(1.08);box-shadow:0 0 0 2px var(--accent),0 14px 28px rgba(var(--accent-rgb),.32);background:#fff;}
+.subj-card.used{opacity:.42;}
+.subj-icon{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;}
+.subj-name{font-size:14px;}
+.subj-count{font-size:11px;color:var(--muted);}
+.draw-stage{
+  display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:stretch;
+}
+.draw-result-box{
+  border-radius:24px;padding:22px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.85);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;
+}
+.draw-btn{
+  padding:12px 26px;border-radius:999px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+  color:#fff;font-size:15px;
+  box-shadow:0 10px 24px rgba(var(--accent-rgb),.32);
+  transition:transform .35s var(--spring);
+}
+.draw-btn:hover{transform:translateY(-2px) scale(1.02);}
+.draw-btn:active{transform:scale(.95);}
+.history-box{
+  border-radius:24px;padding:18px;
+  background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.8);
+  display:flex;flex-direction:column;gap:10px;max-height:220px;overflow-y:auto;
+}
+.history-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.62);font-size:13px;
+}
+
+.modal-backdrop{
+  position:fixed;inset:0;z-index:50;
+  background:rgba(25,28,34,.22);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  display:none;place-items:center;padding:20px;
+}
+.modal-backdrop.open{display:grid;}
+.modal-card{
+  width:100%;max-width:440px;border-radius:28px;padding:22px;
+  animation:springIn .4s var(--spring);
+}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.search-input{
+  width:100%;padding:12px 16px;border-radius:16px;
+  background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);
+  outline:none;font-size:15px;margin-bottom:12px;
+}
+.cmd-list{display:flex;flex-direction:column;gap:6px;}
+.cmd-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;border-radius:14px;background:rgba(255,255,255,.46);
+  font-size:14px;text-align:left;width:100%;
+}
+.cmd-item:hover{background:rgba(255,255,255,.82);}
+.todo-row{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
+  background:rgba(255,255,255,.58);margin-bottom:8px;cursor:pointer;
+}
+.todo-check{
+  width:20px;height:20px;border-radius:7px;border:1.5px solid var(--accent);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.todo-row.done .todo-check{background:var(--accent);color:#fff;}
+.todo-row.done span{text-decoration:line-through;color:var(--muted);}
+
+.drawer-overlay{
+  position:fixed;inset:0;z-index:39;background:rgba(20,24,30,.24);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:none;
+}
+.drawer-overlay.open{display:block;}
+.mobile-nav{
+  display:none;
+  position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));
+  z-index:35;border-radius:26px;padding:8px 10px;
+  justify-content:space-around;align-items:center;
+}
+.mnav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 12px;border-radius:16px;font-size:11px;color:var(--muted);
+}
+.mnav-btn.active{color:var(--accent);background:rgba(255,255,255,.65);}
+
+@media (max-width:1024px){
+  .menu-btn{display:grid;}
+  .sidebar{
+    position:fixed;top:0;left:0;bottom:0;z-index:40;margin:0;
+    height:100vh;border-radius:0 28px 28px 0;
+    transform:translateX(-110%);
+  }
+  .sidebar.open{transform:translateX(0);}
+  .bento-top{grid-template-columns:1fr;}
+  .mini-grid{grid-template-columns:repeat(4,1fr);}
+  .bento-bottom{grid-template-columns:1fr;}
+  .subject-grid{grid-template-columns:repeat(3,1fr);}
+  .draw-stage{grid-template-columns:1fr;}
+}
+@media (max-width:640px){
+  .main{padding:14px 14px calc(92px + env(safe-area-inset-bottom));gap:16px;}
+  .search-pill span.search-label{display:none;}
+  .search-pill{min-width:auto;padding:0 12px;}
+  .hero-card{flex-direction:column;align-items:flex-start;padding:22px;}
+  .hero-right{width:154px;height:154px;align-self:center;}
+  .mini-grid{grid-template-columns:repeat(2,1fr);}
+  .subject-grid{grid-template-columns:repeat(2,1fr);}
+  .mobile-nav{display:flex;}
+}
+</style>
+</head>
+<body>
+<div class="wallpaper" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
+<div class="app-shell">
+  <aside class="sidebar glass" id="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-mark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 12 4-8 4 8 4-12"/></svg>
+        </div>
+        <span class="brand-title">Wesley</span>
+      </div>
+      <nav class="nav-list" id="sideNav">
+        <button class="nav-item active" data-nav="home">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+          <span data-i18n="navHome">首頁</span>
+        </button>
+        <button class="nav-item" data-nav="draw">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor"/></svg>
+          <span data-i18n="navDraw">溫習抽籤</span>
+        </button>
+        <button class="nav-item" data-nav="focus">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span data-i18n="navFocus">專注計時</span>
+        </button>
+        <button class="nav-item" data-nav="tasks">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <span data-i18n="navTasks">待辦清單</span>
+        </button>
+        <button class="nav-item" data-nav="stats">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20v-4"/></svg>
+          <span data-i18n="navStats">學習數據</span>
+        </button>
+      </nav>
+    </div>
+    <div class="profile-card">
+      <div class="avatar">W</div>
+      <div class="profile-meta">
+        <div class="profile-name">Wesley</div>
+        <div class="profile-handle">@Wesley67123a</div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="top-left">
+        <button class="menu-btn glass" id="menuBtn" aria-label="Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+        <div class="crumb-pill glass">
+          <span>Wesley</span>
+          <span class="crumb-sep">&gt;</span>
+          <span data-i18n="crumbHome">首頁</span>
+        </div>
+      </div>
+
+      <div class="top-right">
+        <button class="pill-btn glass" id="langBtn">中 / EN</button>
+        <div class="accent-pill glass" id="accentBar" aria-label="Accent Colors">
+          <button class="dot active" data-color="#F47B5B" style="background:#F47B5B" title="Coral"></button>
+          <button class="dot" data-color="#5F9E7E" style="background:#5F9E7E" title="Sage"></button>
+          <button class="dot" data-color="#4A90D9" style="background:#4A90D9" title="Sky"></button>
+          <button class="dot" data-color="#8B6CE2" style="background:#8B6CE2" title="Lavender"></button>
+          <button class="dot" data-color="#E59A38" style="background:#E59A38" title="Amber"></button>
+          <label class="dot dot-rainbow" id="customColorDot" title="Custom">
+            <input type="color" id="customColorInput" value="#F47B5B">
+          </label>
+        </div>
+        <button class="search-pill glass" id="searchBtn">
+          <span style="display:flex;align-items:center;gap:7px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <span class="search-label" data-i18n="searchHint">搜尋</span>
+          </span>
+          <span class="kbd">⌘K</span>
+        </button>
+        <div class="top-avatar">W</div>
+      </div>
+    </header>
+
+    <section class="greeting-row">
+      <div>
+        <h1 class="greeting-title" id="greetingText">早安，Wesley</h1>
+        <p class="greeting-sub" id="greetingSub">載入時間中...</p>
+      </div>
+    </section>
+
+    <section class="bento-top">
+      <div class="hero-card glass">
+        <div class="hero-left">
+          <div class="hero-chips">
+            <span class="chip" id="weatherChip">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H7a4 4 0 0 1-.4-7.98A5.5 5.5 0 0 1 17.3 9.5a3.5 3.5 0 0 1 .2 9.5Z"/></svg>
+              <span id="weatherText">香港 18°C 多雲</span>
+            </span>
+            <span class="chip">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="4"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <span id="dateChipText">--</span>
+            </span>
+          </div>
+          <div>
+            <div class="clock-digits" id="clockDigits">00:00:00</div>
+            <div class="clock-full-date" id="clockFullDate">--</div>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <svg class="orbital-svg" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="1.5" stroke-dasharray="4 6"/>
+            <circle cx="100" cy="100" r="66" fill="none" stroke="rgba(var(--accent-rgb),.32)" stroke-width="1.5"/>
+            <circle cx="100" cy="100" r="44" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="1.5"/>
+            <g id="orbitHour"><circle cx="100" cy="56" r="4.5" fill="var(--text)"/></g>
+            <g id="orbitMin"><circle cx="100" cy="34" r="5.5" fill="var(--accent)"/></g>
+            <g id="orbitSec"><circle cx="100" cy="12" r="6" fill="#fff" stroke="var(--accent)" stroke-width="2.5"/></g>
+          </svg>
+          <div class="orbit-center-w">W</div>
+        </div>
+      </div>
+
+      <div class="mini-grid">
+        <button class="mini-card glass mini-peach" id="cardDrawTrigger">
+          <div class="mini-top">
+            <div class="mini-icon" style="color:#E06B47">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
+            </div>
+            <span class="mini-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+          <div>
+            <div class="mini-label" data-i18n="cardDrawLabel">今日溫習</div>
+            <div class="mini-value" id="cardDrawValue">點擊抽籤</div>
+          </div>
+        </button>
+
+        <button class="mini-card glass" id="cardTasksTrigger">
+          <div class="mini-top">
+            <div class="mini-icon" style="color:#5F9E7E">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+            </div>
+            <span class="mini-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+            </span>
+          </div>
+          <div>
+            <div class="mini-label" data-i18n="cardTasksLabel">待辦事項</div>
+            <div class="mini-value" id="cardTasksValue">2 / 4 完成</div>
+          </div>
+        </button>
+
+        <button class="mini-card glass" id="cardTimerTrigger">
+          <div class="mini-top">
+            <div class="mini-icon" style="color:#E59A38">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/></svg>
+            </div>
+            <span class="mini-arrow" id="timerBadge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </span>
+          </div>
+          <div>
+            <div class="mini-label" data-i18n="cardTimerLabel">專注計時</div>
+            <div class="mini-value" id="cardTimerValue">25:00</div>
+          </div>
+        </button>
+
+        <button class="mini-card glass" id="cardWaterTrigger">
+          <div class="mini-top">
+            <div class="mini-icon" style="color:#4A90D9">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5C12 2.5 6 9.5 6 14a6 6 0 0 0 12 0c0-4.5-6-11.5-6-11.5Z"/></svg>
+            </div>
+            <span class="mini-arrow">+1</span>
+          </div>
+          <div>
+            <div class="mini-label" data-i18n="cardWaterLabel">今日補水</div>
+            <div class="mini-value" id="cardWaterValue">4 / 8 杯</div>
+          </div>
+        </button>
+      </div>
+    </section>
+
+    <section class="draw-panel glass" id="drawPanel">
+      <div class="draw-head">
+        <div>
+          <h2 class="card-title" data-i18n="drawTitle">6 科溫習抽籤</h2>
+          <p class="card-sub" data-i18n="drawSub">Chem · Bio · Eng · Math · ICT · Chi</p>
+        </div>
+        <div class="draw-controls">
+          <div class="seg-switch" id="modeSwitch">
+            <button class="seg-btn active" data-mode="unique" data-i18n="modeUnique">不重複</button>
+            <button class="seg-btn" data-mode="repeat" data-i18n="modeRepeat">可重複</button>
+          </div>
+          <button class="pill-btn glass" id="resetDrawBtn" data-i18n="resetDraw">重設本輪</button>
+          <button class="icon-btn" id="closeDrawBtn" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="subject-grid" id="subjectGrid"></div>
+
+      <div class="draw-stage">
+        <div class="draw-result-box">
+          <div id="drawPickedIcon" class="subj-icon" style="width:56px;height:56px;background:var(--accent-soft);color:var(--accent)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/></svg>
+          </div>
+          <div style="font-size:22px" id="drawResultName">準備抽籤</div>
+          <div style="font-size:13px;color:var(--muted)" id="drawResultHint">點擊下方按鈕隨機抽取下一個溫習科目</div>
+          <button class="draw-btn" id="startDrawBtn" data-i18n="startDraw">開始抽籤</button>
+        </div>
+        <div class="history-box">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:14px" data-i18n="historyTitle">抽籤紀錄</span>
+            <button style="font-size:12px;color:var(--muted)" id="clearHistoryBtn" data-i18n="clearHistory">清除</button>
+          </div>
+          <div id="historyList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bento-bottom" id="statsSection">
+      <div class="data-card glass">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title" data-i18n="chartTitle">每週學習趨勢</h2>
+            <p class="card-sub" id="chartSub">本週每日溫習節數</p>
+          </div>
+          <div class="seg-switch" id="datasetSwitch">
+            <button class="seg-btn active" data-ds="A">A</button>
+            <button class="seg-btn" data-ds="B">B</button>
+          </div>
+        </div>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+
+      <div class="data-card glass">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title" data-i18n="distTitle">科目抽籤分佈</h2>
+            <p class="card-sub" id="distSub">依抽籤紀錄即時同步</p>
+          </div>
+          <button class="icon-btn" id="refreshStatsBtn" title="Reset">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+          </button>
+        </div>
+        <div class="multi-bar" id="multiBar"></div>
+        <div class="prog-list" id="progList"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<nav class="mobile-nav glass" id="mobileNav">
+  <button class="mnav-btn active" data-nav="home">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+    <span data-i18n="navHome">首頁</span>
+  </button>
+  <button class="mnav-btn" data-nav="draw">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/></svg>
+    <span data-i18n="navDraw">抽籤</span>
+  </button>
+  <button class="mnav-btn" data-nav="focus">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span data-i18n="navFocus">專注</span>
+  </button>
+  <button class="mnav-btn" data-nav="tasks">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    <span data-i18n="navTasks">待辦</span>
+  </button>
+</nav>
+
+<div class="modal-backdrop" id="searchModal">
+  <div class="modal-card glass">
+    <div class="modal-head">
+      <span data-i18n="cmdTitle">快速指令</span>
+      <button class="icon-btn" id="closeSearchBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <input class="search-input" id="cmdInput" placeholder="輸入指令或功能...">
+    <div class="cmd-list" id="cmdList"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="tasksModal">
+  <div class="modal-card glass">
+    <div class="modal-head">
+      <span data-i18n="tasksModalTitle">今日待辦清單</span>
+      <button class="icon-btn" id="closeTasksBtn">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="todoList"></div>
+  </div>
+</div>
+
+<script>
+(()=>{
+const SUBJECTS=[
+  {id:'Chem',color:'#F47B5B',bg:'rgba(244,123,91,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v5.5L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 8.5V3"/><path d="M7.5 14h9"/></svg>'},
+  {id:'Bio',color:'#5F9E7E',bg:'rgba(95,158,126,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3c0 6 10 6 10 12s-10 6-10 6"/><path d="M17 3c0 6-10 6-10 12s10 6 10 6"/><path d="M8 7h8M8 17h8"/></svg>'},
+  {id:'Eng',color:'#4A90D9',bg:'rgba(74,144,217,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'},
+  {id:'Math',color:'#8B6CE2',bg:'rgba(139,108,226,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7v11"/><path d="M15 7v8a3 3 0 0 0 3 3"/></svg>'},
+  {id:'ICT',color:'#E59A38',bg:'rgba(229,154,56,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>'},
+  {id:'Chi',color:'#D96B8A',bg:'rgba(217,107,138,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect x="5" y="7" width="14" height="9" rx="2"/></svg>'}
+];
+
+const I18N={
+  zh:{
+    crumbHome:'首頁',navHome:'首頁',navDraw:'溫習抽籤',navFocus:'專注計時',navTasks:'待辦清單',navStats:'學習數據',
+    searchHint:'搜尋',cardDrawLabel:'今日溫習',cardTasksLabel:'待辦事項',cardTimerLabel:'專注計時',cardWaterLabel:'今日補水',
+    drawTitle:'6 科溫習抽籤',drawSub:'Chem · Bio · Eng · Math · ICT · Chi',modeUnique:'不重複',modeRepeat:'可重複',
+    resetDraw:'重設本輪',startDraw:'開始抽籤',historyTitle:'抽籤紀錄',clearHistory:'清除',
+    chartTitle:'每週學習趨勢',distTitle:'科目抽籤分佈',cmdTitle:'快速指令',tasksModalTitle:'今日待辦清單',
+    clickToDraw:'點擊抽籤',readyDraw:'準備抽籤',readyHint:'點擊下方按鈕隨機抽取下一個溫習科目',
+    weather:'香港 18°C 多雲',morning:'早安，Wesley',afternoon:'午安，Wesley',evening:'晚安，Wesley',
+    chartSubA:'本週每日溫習節數',chartSubB:'本週專注分鐘數',distSub:'依抽籤紀錄即時同步',
+    done:'完成',cups:'杯',noHist:'尚無抽籤紀錄'
+  },
+  en:{
+    crumbHome:'Home',navHome:'Home',navDraw:'Study Draw',navFocus:'Focus Timer',navTasks:'Tasks',navStats:'Analytics',
+    searchHint:'Search',cardDrawLabel:'Today Study',cardTasksLabel:'Tasks',cardTimerLabel:'Focus Timer',cardWaterLabel:'Hydration',
+    drawTitle:'6-Subject Study Draw',drawSub:'Chem · Bio · Eng · Math · ICT · Chi',modeUnique:'Unique',modeRepeat:'Repeatable',
+    resetDraw:'Reset Round',startDraw:'Draw Subject',historyTitle:'Draw History',clearHistory:'Clear',
+    chartTitle:'Weekly Trend',distTitle:'Subject Distribution',cmdTitle:'Quick Commands',tasksModalTitle:'Today Tasks',
+    clickToDraw:'Tap to Draw',readyDraw:'Ready to Draw',readyHint:'Tap the button below to pick your next subject',
+    weather:'HK 18°C Cloudy',morning:'Good morning, Wesley',afternoon:'Good afternoon, Wesley',evening:'Good evening, Wesley',
+    chartSubA:'Daily study sessions this week',chartSubB:'Daily focus minutes this week',distSub:'Synced live with draw history',
+    done:'done',cups:'cups',noHist:'No draws yet'
+  }
+};
+
+let lang=localStorage.getItem('wesley_lang')||'zh';
+let accent=localStorage.getItem('wesley_accent')||'#F47B5B';
+let drawMode=localStorage.getItem('wesley_draw_mode')||'unique';
+let usedIds=JSON.parse(localStorage.getItem('wesley_used')||'[]');
+let history=JSON.parse(localStorage.getItem('wesley_history')||'[]');
+let water=Number(localStorage.getItem('wesley_water')||4);
+let todos=JSON.parse(localStorage.getItem('wesley_todos')||'[{"id":1,"t":"Chem Organic Revision","d":true},{"id":2,"t":"Bio Past Paper MCQ","d":true},{"id":3,"t":"Math Calculus Practice","d":false},{"id":4,"t":"ICT SQL & Logic","d":false}]');
+let dsMode='A';
+let timerSec=25*60,timerRun=false,timerId=null,drawing=false;
+
+function hexToRgb(hex){
+  const h=hex.replace('#','');
+  const n=parseInt(h.length===3?h.split('').map(c=>c+c).join(''):h,16);
+  return `${(n>>16)&255},${(n>>8)&255},${n&255}`;
+}
+function applyAccent(hex){
+  accent=hex;
+  localStorage.setItem('wesley_accent',hex);
+  const rgb=hexToRgb(hex);
+  document.documentElement.style.setProperty('--accent',hex);
+  document.documentElement.style.setProperty('--accent-deep',hex);
+  document.documentElement.style.setProperty('--accent-rgb',rgb);
+  document.documentElement.style.setProperty('--accent-soft',`rgba(${rgb},.16)`);
+  let matched=false;
+  document.querySelectorAll('#accentBar .dot[data-color]').forEach(d=>{
+    const isMatch=d.dataset.color.toLowerCase()===hex.toLowerCase();
+    d.classList.toggle('active',isMatch);
+    if(isMatch)matched=true;
+  });
+  document.getElementById('customColorDot').classList.toggle('active',!matched);
+  document.getElementById('customColorInput').value=hex;
+}
+
+function applyLang(){
+  const t=I18N[lang];
+  document.documentElement.lang=lang==='zh'?'zh-Hant':'en';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.dataset.i18n;
+    if(t[k])el.textContent=t[k];
+  });
+  document.getElementById('weatherText').textContent=t.weather;
+  document.getElementById('distSub').textContent=t.distSub;
+  updateClock();
+  renderDrawState();
+  renderTasksCard();
+  renderWater();
+  renderChart();
+  renderDist();
+}
+
+function updateClock(){
+  const now=new Date();
+  const h=now.getHours();
+  const t=I18N[lang];
+  const greet=h<12?t.morning:(h<18?t.afternoon:t.evening);
+  document.getElementById('greetingText').textContent=greet;
+  const pad=n=>String(n).padStart(2,'0');
+  const timeStr=`${pad(h)}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  document.getElementById('clockDigits').textContent=timeStr;
+  const loc=lang==='zh'?'zh-HK':'en-US';
+  const full=now.toLocaleDateString(loc,{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+  const shortD=now.toLocaleDateString(loc,{month:'short',day:'numeric'});
+  document.getElementById('clockFullDate').textContent=full;
+  document.getElementById('dateChipText').textContent=shortD;
+  document.getElementById('greetingSub').textContent=`${full} · ${timeStr}`;
+  const sDeg=now.getSeconds()*6;
+  const mDeg=now.getMinutes()*6+now.getSeconds()*0.1;
+  const hDeg=(h%12)*30+now.getMinutes()*0.5;
+  document.getElementById('orbitSec').setAttribute('transform',`rotate(${sDeg} 100 100)`);
+  document.getElementById('orbitMin').setAttribute('transform',`rotate(${mDeg} 100 100)`);
+  document.getElementById('orbitHour').setAttribute('transform',`rotate(${hDeg} 100 100)`);
+}
+
+function renderDrawState(){
+  const t=I18N[lang];
+  const last=history[0];
+  const cardVal=document.getElementById('cardDrawValue');
+  if(last){
+    const s=SUBJECTS.find(x=>x.id===last.id)||SUBJECTS[0];
+    cardVal.innerHTML=`<span style="color:${s.color};display:inline-flex">${s.svg}</span><span>${s.id}</span>`;
+    document.getElementById('drawResultName').textContent=s.id;
+    document.getElementById('drawPickedIcon').innerHTML=s.svg;
+    document.getElementById('drawPickedIcon').style.color=s.color;
+    document.getElementById('drawPickedIcon').style.background=s.bg;
+  }else{
+    cardVal.textContent=t.clickToDraw;
+    document.getElementById('drawResultName').textContent=t.readyDraw;
+  }
+  document.getElementById('drawResultHint').textContent=t.readyHint;
+
+  const counts={};
+  SUBJECTS.forEach(s=>counts[s.id]=0);
+  history.forEach(h=>{if(counts[h.id]!==undefined)counts[h.id]++;});
+  document.getElementById('subjectGrid').innerHTML=SUBJECTS.map(s=>{
+    const isUsed=drawMode==='unique'&&usedIds.includes(s.id);
+    const isChosen=last&&last.id===s.id;
+    return `<div class="subj-card ${isUsed?'used':''} ${isChosen?'chosen':''}" data-subj="${s.id}">
+      <div class="subj-icon" style="background:${s.bg};color:${s.color}">${s.svg}</div>
+      <div class="subj-name">${s.id}</div>
+      <div class="subj-count">${counts[s.id]}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('historyList').innerHTML=history.length
+    ?history.slice(0,12).map(h=>{
+      const s=SUBJECTS.find(x=>x.id===h.id)||SUBJECTS[0];
+      return `<div class="history-item"><span style="display:flex;align-items:center;gap:8px;color:${s.color}">${s.svg}<span style="color:var(--text)">${s.id}</span></span><span style="color:var(--muted)">${h.time}</span></div>`;
+    }).join('')
+    :`<div style="color:var(--muted);font-size:13px;padding:8px 0">${t.noHist}</div>`;
+
+  document.querySelectorAll('#modeSwitch .seg-btn').forEach(b=>{
+    b.classList.toggle('active',b.dataset.mode===drawMode);
+  });
+}
+
+function runDraw(){
+  if(drawing)return;
+  let pool=drawMode==='unique'?SUBJECTS.filter(s=>!usedIds.includes(s.id)):SUBJECTS;
+  if(!pool.length){usedIds=[];localStorage.setItem('wesley_used','[]');pool=SUBJECTS;}
+  drawing=true;
+  let step=0,total=14;
+  const cards=[...document.querySelectorAll('.subj-card')];
+  const iv=setInterval(()=>{
+    cards.forEach(c=>c.classList.remove('picking'));
+    const rnd=pool[Math.floor(Math.random()*pool.length)];
+    const el=document.querySelector(`.subj-card[data-subj="${rnd.id}"]`);
+    if(el)el.classList.add('picking');
+    step++;
+    if(step>=total){
+      clearInterval(iv);
+      cards.forEach(c=>c.classList.remove('picking'));
+      const pick=pool[Math.floor(Math.random()*pool.length)];
+      if(drawMode==='unique'){usedIds.push(pick.id);localStorage.setItem('wesley_used',JSON.stringify(usedIds));}
+      const now=new Date();
+      const tm=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      history.unshift({id:pick.id,time:tm});
+      localStorage.setItem('wesley_history',JSON.stringify(history));
+      drawing=false;
+      renderDrawState();
+      renderDist();
+    }
+  },75);
+}
+
+function renderChart(){
+  const days=lang==='zh'?['一','二','三','四','五','六','日']:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const vals=dsMode==='A'?[3,5,4,6,7,4,5]:[75,110,90,135,160,95,120];
+  const max=Math.max(...vals);
+  document.getElementById('chartSub').textContent=dsMode==='A'?I18N[lang].chartSubA:I18N[lang].chartSubB;
+  document.getElementById('barChart').innerHTML=vals.map((v,i)=>{
+    const pct=Math.round((v/max)*100);
+    return `<div class="bar-col"><div class="bar-track"><div class="bar-fill ${v===max?'peak':''}" style="height:${pct}%"></div></div><span class="bar-day">${days[i]}</span></div>`;
+  }).join('');
+}
+
+function renderDist(){
+  const counts=SUBJECTS.map(s=>({
+    ...s,
+    c:history.filter(h=>h.id===s.id).length
+  }));
+  const total=counts.reduce((a,b)=>a+b.c,0);
+  const top4=[...counts].sort((a,b)=>b.c-a.c).slice(0,4);
+  document.getElementById('multiBar').innerHTML=total
+    ?counts.filter(x=>x.c>0).map(x=>`<div class="multi-seg" style="width:${(x.c/total)*100}%;background:${x.color}"></div>`).join('')
+    :`<div class="multi-seg" style="width:100%;background:rgba(var(--accent-rgb),.28)"></div>`;
+  document.getElementById('progList').innerHTML=top4.map(x=>{
+    const pct=total?Math.round((x.c/total)*100):0;
+    return `<div class="prog-row"><div class="prog-meta"><span>${x.id}</span><span style="color:var(--muted)">${x.c} (${pct}%)</span></div><div class="prog-track"><div class="prog-fill" style="width:${pct}%;background:${x.color}"></div></div></div>`;
+  }).join('');
+}
+
+function renderTasksCard(){
+  const done=todos.filter(x=>x.d).length;
+  document.getElementById('cardTasksValue').textContent=`${done} / ${todos.length} ${I18N[lang].done}`;
+  document.getElementById('todoList').innerHTML=todos.map(x=>`
+    <div class="todo-row ${x.d?'done':''}" data-tid="${x.id}">
+      <div class="todo-check">${x.d?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>':''}</div>
+      <span>${x.t}</span>
+    </div>`).join('');
+}
+
+function renderWater(){
+  document.getElementById('cardWaterValue').textContent=`${water} / 8 ${I18N[lang].cups}`;
+}
+
+function toggleTimer(){
+  if(timerRun){
+    clearInterval(timerId);timerRun=false;
+    document.getElementById('timerBadge').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  }else{
+    timerRun=true;
+    document.getElementById('timerBadge').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
+    timerId=setInterval(()=>{
+      timerSec=timerSec>0?timerSec-1:25*60;
+      const m=String(Math.floor(timerSec/60)).padStart(2,'0');
+      const s=String(timerSec%60).padStart(2,'0');
+      document.getElementById('cardTimerValue').textContent=`${m}:${s}`;
+    },1000);
+  }
+}
+
+function openSearch(){
+  const cmds=[
+    {k:'draw',label:lang==='zh'?'開啟 6 科溫習抽籤':'Open 6-Subject Study Draw'},
+    {k:'timer',label:lang==='zh'?'開始 / 暫停專注計時':'Toggle Focus Timer'},
+    {k:'tasks',label:lang==='zh'?'查看今日待辦清單':'Open Today Tasks'},
+    {k:'lang',label:lang==='zh'?'切換語言 (中 / EN)':'Switch Language (中 / EN)'}
+  ];
+  const q=document.getElementById('cmdInput').value.toLowerCase();
+  document.getElementById('cmdList').innerHTML=cmds.filter(c=>c.label.toLowerCase().includes(q)).map(c=>`
+    <button class="cmd-item" data-cmd="${c.k}"><span>${c.label}</span><span class="kbd">Enter</span></button>`).join('');
+  document.getElementById('searchModal').classList.add('open');
+}
+
+document.getElementById('langBtn').onclick=()=>{lang=lang==='zh'?'en':'zh';localStorage.setItem('wesley_lang',lang);applyLang();};
+document.querySelectorAll('#accentBar .dot[data-color]').forEach(d=>d.onclick=()=>applyAccent(d.dataset.color));
+document.getElementById('customColorInput').oninput=e=>applyAccent(e.target.value);
+document.getElementById('cardDrawTrigger').onclick=()=>document.getElementById('drawPanel').classList.toggle('open');
+document.getElementById('closeDrawBtn').onclick=()=>document.getElementById('drawPanel').classList.remove('open');
+document.getElementById('startDrawBtn').onclick=runDraw;
+document.getElementById('resetDrawBtn').onclick=()=>{usedIds=[];localStorage.setItem('wesley_used','[]');renderDrawState();};
+document.getElementById('clearHistoryBtn').onclick=()=>{history=[];usedIds=[];localStorage.setItem('wesley_history','[]');localStorage.setItem('wesley_used','[]');renderDrawState();renderDist();};
+document.getElementById('refreshStatsBtn').onclick=()=>{history=[];usedIds=[];localStorage.setItem('wesley_history','[]');localStorage.setItem('wesley_used','[]');renderDrawState();renderDist();};
+document.querySelectorAll('#modeSwitch .seg-btn').forEach(b=>b.onclick=()=>{drawMode=b.dataset.mode;localStorage.setItem('wesley_draw_mode',drawMode);renderDrawState();});
+document.querySelectorAll('#datasetSwitch .seg-btn').forEach(b=>b.onclick=()=>{
+  dsMode=b.dataset.ds;
+  document.querySelectorAll('#datasetSwitch .seg-btn').forEach(x=>x.classList.toggle('active',x.dataset.ds===dsMode));
+  renderChart();
+});
+document.getElementById('cardTimerTrigger').onclick=toggleTimer;
+document.getElementById('cardWaterTrigger').onclick=()=>{water=water>=8?0:water+1;localStorage.setItem('wesley_water',water);renderWater();};
+document.getElementById('cardTasksTrigger').onclick=()=>document.getElementById('tasksModal').classList.add('open');
+document.getElementById('closeTasksBtn').onclick=()=>document.getElementById('tasksModal').classList.remove('open');
+document.getElementById('todoList').onclick=e=>{
+  const r=e.target.closest('.todo-row');if(!r)return;
+  const id=Number(r.dataset.tid);
+  todos=todos.map(x=>x.id===id?{...x,d:!x.d}:x);
+  localStorage.setItem('wesley_todos',JSON.stringify(todos));
+  renderTasksCard();
+};
+document.getElementById('searchBtn').onclick=()=>{document.getElementById('cmdInput').value='';openSearch();document.getElementById('cmdInput').focus();};
+document.getElementById('closeSearchBtn').onclick=()=>document.getElementById('searchModal').classList.remove('open');
+document.getElementById('cmdInput').oninput=openSearch;
+document.getElementById('cmdList').onclick=e=>{
+  const b=e.target.closest('.cmd-item');if(!b)return;
+  document.getElementById('searchModal').classList.remove('open');
+  if(b.dataset.cmd==='draw')document.getElementById('drawPanel').classList.add('open');
+  if(b.dataset.cmd==='timer')toggleTimer();
+  if(b.dataset.cmd==='tasks')document.getElementById('tasksModal').classList.add('open');
+  if(b.dataset.cmd==='lang'){lang=lang==='zh'?'en':'zh';localStorage.setItem('wesley_lang',lang);applyLang();}
+};
+window.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.getElementById('cmdInput').value='';openSearch();document.getElementById('cmdInput').focus();}
+  if(e.key==='Escape'){document.getElementById('searchModal').classList.remove('open');document.getElementById('tasksModal').classList.remove('open');}
+});
+
+const toggleDrawer=open=>{
+  document.getElementById('sidebar').classList.toggle('open',open);
+  document.getElementById('drawerOverlay').classList.toggle('open',open);
+};
+document.getElementById('menuBtn').onclick=()=>toggleDrawer(true);
+document.getElementById('drawerOverlay').onclick=()=>toggleDrawer(false);
+document.querySelectorAll('[data-nav]').forEach(btn=>btn.onclick=()=>{
+  const n=btn.dataset.nav;
+  document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x.dataset.nav===n));
+  toggleDrawer(false);
+  if(n==='draw'){document.getElementById('drawPanel').classList.add('open');document.getElementById('drawPanel').scrollIntoView({behavior:'smooth'});}
+  if(n==='focus')toggleTimer();
+  if(n==='tasks')document.getElementById('tasksModal').classList.add('open');
+  if(n==='stats')document.getElementById('statsSection').scrollIntoView({behavior:'smooth'});
+  if(n==='home')window.scrollTo({top:0,behavior:'smooth'});
+});
+
+applyAccent(accent);
+applyLang();
+setInterval(updateClock,1000);
+if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js');
+})();
+</script>
+</body>
+</html>
