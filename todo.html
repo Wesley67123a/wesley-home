@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F7F3EE">
+<title>Wesley Flow — 個人生產力與學習工作台</title>
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<style>
+:root {
+  --accent: #F47B5B;
+  --accent-rgb: 244, 123, 91;
+  --accent-deep: #D85D3E;
+  --accent-soft: rgba(244, 123, 91, 0.14);
+  --green: #3E9B6E;
+  --green-soft: rgba(62, 155, 110, 0.14);
+  --blue: #4A85D6;
+  --blue-soft: rgba(74, 133, 214, 0.14);
+  --amber: #D98A2B;
+  --amber-soft: rgba(217, 138, 43, 0.15);
+  --red: #D94E4E;
+  --red-soft: rgba(217, 78, 78, 0.14);
+  --purple: #7C5CD6;
+  --purple-soft: rgba(124, 92, 214, 0.14);
+  --bg: #F6F2EC;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-strong: rgba(255, 255, 255, 0.92);
+  --border: rgba(31, 35, 40, 0.09);
+  --text: #1F2328;
+  --muted: #656D76;
+  --shadow: 0 12px 32px rgba(31, 35, 40, 0.07);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --transition: 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(244, 123, 91, 0.16), transparent 42%),
+    radial-gradient(circle at 88% 18%, rgba(62, 155, 110, 0.13), transparent 40%),
+    radial-gradient(circle at 50% 92%, rgba(124, 92, 214, 0.11), transparent 45%),
+    linear-gradient(150deg, #FBF8F4 0%, #F3EEE8 55%, #ECE8F2 100%);
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Layout */
+.app {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 18px 18px 96px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--surface-strong);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: var(--shadow);
+  border-radius: 24px;
+  padding: 14px 20px;
+  margin-bottom: 18px;
+}
+
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.back-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(31, 35, 40, 0.05);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 500;
+  transition: var(--transition);
+}
+.back-home:hover {
+  background: rgba(31, 35, 40, 0.1);
+  color: var(--text);
+}
+
+.brand-title {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gamify-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.lvl-badge {
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  color: #fff;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.exp-mini-bar {
+  width: 68px;
+  height: 6px;
+  background: rgba(31, 35, 40, 0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.exp-mini-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #FFA07A);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.ritual-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.ritual-btn.morning {
+  background: var(--amber-soft);
+  color: #A16207;
+}
+.ritual-btn.morning:hover {
+  background: rgba(217, 138, 43, 0.25);
+}
+.ritual-btn.evening {
+  background: var(--purple-soft);
+  color: #5B3CC4;
+}
+.ritual-btn.evening:hover {
+  background: rgba(124, 92, 214, 0.24);
+}
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.nav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+  transition: var(--transition);
+}
+.nav-tab:hover {
+  background: var(--surface-strong);
+  color: var(--text);
+}
+.nav-tab.active {
+  background: var(--text);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(31, 35, 40, 0.16);
+}
+
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.25s ease;
+}
+.tab-panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.card-title {
+  margin: 0 0 14px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.grid-equal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* Top 3 Banner */
+.top3-card {
+  background: linear-gradient(135deg, rgba(255, 248, 238, 0.92), rgba(255, 255, 255, 0.86));
+  border: 1px solid rgba(244, 123, 91, 0.28);
+  margin-bottom: 18px;
+}
+
+.top3-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.top3-slot {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: var(--transition);
+}
+.top3-slot.done {
+  opacity: 0.65;
+  background: rgba(62, 155, 110, 0.08);
+}
+.top3-rank {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Buttons & Inputs */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-deep);
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: rgba(31, 35, 40, 0.07);
+  color: var(--text);
+}
+.btn-secondary:hover {
+  background: rgba(31, 35, 40, 0.13);
+}
+.btn-danger {
+  background: var(--red-soft);
+  color: var(--red);
+}
+.btn-danger:hover {
+  background: rgba(217, 78, 78, 0.24);
+}
+.btn-success {
+  background: var(--green);
+  color: #fff;
+}
+.btn-success:hover {
+  background: #31825B;
+}
+.btn-sm {
+  padding: 6px 11px;
+  font-size: 12.5px;
+  border-radius: 10px;
+}
+
+.input, .select, .textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+.input:focus, .select:focus, .textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Task Form */
+.task-form {
+  display: grid;
+  grid-template-columns: 1fr 110px 120px 140px auto;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.pill-group {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  padding: 6px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  background: rgba(31, 35, 40, 0.05);
+  transition: var(--transition);
+}
+.filter-pill.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Task List */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.task-item {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  transition: var(--transition);
+}
+.task-item:hover {
+  border-color: rgba(244, 123, 91, 0.35);
+}
+.task-item.completed {
+  opacity: 0.68;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.task-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.task-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  border: 2px solid #C5CBD3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: var(--transition);
+  background: #fff;
+}
+.task-check.checked {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.task-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 15px;
+  font-weight: 600;
+  word-break: break-word;
+}
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 11.5px;
+}
+.badge-high { background: var(--red-soft); color: var(--red); }
+.badge-medium { background: var(--amber-soft); color: #A16207; }
+.badge-low { background: var(--green-soft); color: var(--green); }
+.badge-cat { background: var(--blue-soft); color: var(--blue); }
+.badge-date { background: rgba(31, 35, 40, 0.06); color: var(--muted); }
+.badge-overdue { background: var(--red-soft); color: var(--red); }
+.badge-top3 { background: var(--accent-soft); color: var(--accent-deep); }
+
+.task-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+  transition: var(--transition);
+}
+.icon-btn:hover {
+  background: rgba(31, 35, 40, 0.08);
+  color: var(--text);
+}
+
+/* Subtasks */
+.subtasks-box {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  margin-left: 34px;
+}
+
+.subtask-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(31, 35, 40, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  font-size: 13.5px;
+}
+.subtask-item.done span {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.subtask-add-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Calendar */
+.cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.cal-dow {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 6px 0;
+}
+
+.cal-cell {
+  min-height: 74px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.cal-cell:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.cal-cell.other-month {
+  opacity: 0.38;
+}
+.cal-cell.today {
+  border-color: var(--accent);
+  background: rgba(244, 123, 91, 0.08);
+}
+.cal-cell.selected {
+  background: var(--text);
+  color: #fff;
+  border-color: var(--text);
+}
+
+.cal-day-num {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.cal-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.cal-count {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-deep);
+}
+.cal-cell.selected .cal-count {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* Vocabulary Flashcard */
+.flashcard-stage {
+  background: linear-gradient(145deg, #FFFFFF, #FAF6F0);
+  border: 1px solid rgba(31, 35, 40, 0.09);
+  border-radius: 22px;
+  padding: 28px 24px;
+  text-align: center;
+  min-height: 290px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 28px rgba(31, 35, 40, 0.06);
+  position: relative;
+}
+
+.fc-word {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.fc-phonetic {
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 14px;
+}
+
+.fc-reveal {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 10px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(31, 35, 40, 0.04);
+  text-align: left;
+}
+
+.fc-meaning {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.fc-example {
+  font-size: 14px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.fc-controls {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 18px;
+}
+
+.vocab-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 460px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.vocab-row {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Pomodoro & White Noise */
+.pomo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.pomo-ring-box {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 10px 0 18px;
+}
+
+.pomo-ring-box svg {
+  transform: rotate(-90deg);
+  width: 220px;
+  height: 220px;
+}
+
+.pomo-time-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.pomo-digits {
+  font-size: 44px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+.pomo-mode-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.noise-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.noise-item {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.noise-item.playing {
+  border-color: var(--accent);
+  background: rgba(244, 123, 91, 0.06);
+}
+
+.noise-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.noise-slider {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+/* Achievements */
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 12px;
+}
+
+.ach-card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  text-align: center;
+  transition: var(--transition);
+}
+.ach-card.locked {
+  opacity: 0.5;
+  filter: grayscale(0.8);
+}
+.ach-card.unlocked {
+  border-color: rgba(244, 123, 91, 0.45);
+  background: linear-gradient(180deg, #FFFFFF, #FFF7F3);
+}
+.ach-icon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+.ach-name {
+  font-size: 14px;
+  font-weight: 700;
+}
+.ach-desc {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 100;
+}
+.modal-backdrop.open {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #FFFFFF;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-title {
+  font-size: 19px;
+  font-weight: 800;
+  margin: 0;
+}
+
+.stat-boxes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.stat-box {
+  background: rgba(31, 35, 40, 0.04);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+}
+.stat-val {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent-deep);
+}
+.stat-lbl {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Toast */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  background: var(--text);
+  color: #fff;
+  padding: 11px 16px;
+  border-radius: 14px;
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.25s ease;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 32px 16px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 920px) {
+  .grid-2, .grid-equal {
+    grid-template-columns: 1fr;
+  }
+  .task-form {
+    grid-template-columns: 1fr 1fr;
+  }
+  .task-form .input-title {
+    grid-column: 1 / -1;
+  }
+  .task-form .btn-add {
+    grid-column: 1 / -1;
+  }
+  .top3-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .app {
+    padding: 12px 12px 84px;
+  }
+  .topbar {
+    padding: 12px 14px;
+  }
+  .cal-cell {
+    min-height: 58px;
+    padding: 5px;
+  }
+  .stat-boxes {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="brand-group">
+      <a href="./index.html" class="back-home">← 返回 Wesley 首頁</a>
+      <div class="brand-title">
+        <span class="brand-dot"></span>
+        <span>Wesley Flow</span>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="gamify-pill" title="經驗值與金幣">
+        <span class="lvl-badge" id="hdrLevel">Lv.1</span>
+        <div class="exp-mini-bar"><div class="exp-mini-fill" id="hdrExpFill" style="width:0%"></div></div>
+        <span id="hdrExpText">0/100 EXP</span>
+        <span>🪙 <span id="hdrCoins">0</span></span>
+      </div>
+      <button class="ritual-btn morning" id="openMorningBtn">☀️ 晨間規劃</button>
+      <button class="ritual-btn evening" id="openEveningBtn">🌙 晚間回顧</button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs" id="mainTabs">
+    <button class="nav-tab active" data-tab="tasks">✅ 待辦清單</button>
+    <button class="nav-tab" data-tab="calendar">📅 日曆規劃</button>
+    <button class="nav-tab" data-tab="vocab">📚 高階單字庫</button>
+    <button class="nav-tab" data-tab="focus">🍅 番茄鐘與白噪音</button>
+    <button class="nav-tab" data-tab="achievements">🏆 成就與數據</button>
+  </nav>
+
+  <!-- TAB 1: TASKS -->
+  <section class="tab-panel active" id="panel-tasks">
+    <!-- Top 3 Priorities -->
+    <div class="card top3-card">
+      <div class="card-title">
+        <span>⭐ 今日最重要的 3 件事（Top 3 Priorities）</span>
+        <button class="btn btn-secondary btn-sm" id="editTop3Btn">挑選 / 調整</button>
+      </div>
+      <div class="top3-grid" id="top3Container"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">
+        <span>📝 任務管理</span>
+        <span style="font-size:13px;color:var(--muted);font-weight:500;" id="taskSummaryText">0 項任務</span>
+      </div>
+
+      <!-- Add Task Form -->
+      <form class="task-form" id="addTaskForm">
+        <input type="text" class="input input-title" id="taskTitleInput" placeholder="輸入新任務名稱..." required>
+        <select class="select" id="taskPriorityInput" aria-label="優先級">
+          <option value="high">🔴 高優先</option>
+          <option value="medium" selected>🟡 中優先</option>
+          <option value="low">🟢 低優先</option>
+        </select>
+        <input type="text" class="input" id="taskCategoryInput" list="categoryOptions" placeholder="分類標籤" value="學習">
+        <datalist id="categoryOptions">
+          <option value="學習"></option>
+          <option value="工作"></option>
+          <option value="專案"></option>
+          <option value="閱讀"></option>
+          <option value="生活"></option>
+        </datalist>
+        <input type="date" class="input" id="taskDueInput" aria-label="截止日期">
+        <button type="submit" class="btn btn-primary btn-add">＋ 新增任務</button>
+      </form>
+
+      <!-- Filter Bar -->
+      <div class="filter-bar">
+        <div class="pill-group" id="taskFilterGroup">
+          <button class="filter-pill active" data-filter="all">全部</button>
+          <button class="filter-pill" data-filter="active">進行中</button>
+          <button class="filter-pill" data-filter="completed">已完成</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select class="select" id="taskCategoryFilter" style="width:auto;padding:6px 12px;font-size:13px;">
+            <option value="all">所有分類</option>
+          </select>
+          <button class="btn btn-danger btn-sm" id="clearCompletedBtn">清除已完成</button>
+        </div>
+      </div>
+
+      <!-- Task List -->
+      <div class="task-list" id="taskList"></div>
+    </div>
+  </section>
+
+  <!-- TAB 2: CALENDAR -->
+  <section class="tab-panel" id="panel-calendar">
+    <div class="grid-2">
+      <div class="card">
+        <div class="cal-header">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="btn btn-secondary btn-sm" id="calPrevBtn">◀</button>
+            <strong id="calMonthLabel" style="font-size:17px;min-width:120px;text-align:center;"></strong>
+            <button class="btn btn-secondary btn-sm" id="calNextBtn">▶</button>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="calTodayBtn">回到今天</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span id="calSelectedDateTitle">選擇日期的任務</span>
+        </div>
+        <form id="calAddTaskForm" style="display:flex;gap:8px;margin-bottom:14px;">
+          <input type="text" class="input" id="calTaskTitle" placeholder="直接在此日期新增任務..." required>
+          <select class="select" id="calTaskPriority" style="width:92px;">
+            <option value="high">高</option>
+            <option value="medium" selected>中</option>
+            <option value="low">低</option>
+          </select>
+          <button type="submit" class="btn btn-primary btn-sm">新增</button>
+        </form>
+        <div class="task-list" id="calTaskList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 3: VOCABULARY -->
+  <section class="tab-panel" id="panel-vocab">
+    <div class="grid-2">
+      <!-- Flashcard Mode -->
+      <div class="card">
+        <div class="card-title">
+          <span>🃏 Flashcard 間隔重複抽背</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px;cursor:pointer;">
+              <input type="checkbox" id="fcRandomToggle" checked> 隨機抽題
+            </label>
+            <button class="btn btn-secondary btn-sm" id="fcNextBtn">下一張 ➔</button>
+          </div>
+        </div>
+
+        <div class="flashcard-stage" id="flashcardStage">
+          <div style="position:absolute;top:14px;right:16px;" id="fcStatusBadge"></div>
+          <div class="fc-word" id="fcWord">Loading...</div>
+          <div class="fc-phonetic" id="fcPhonetic"></div>
+          <button class="btn btn-secondary btn-sm" id="fcRevealBtn">👁️ 顯示釋義與例句</button>
+          <div class="fc-reveal" id="fcRevealBox" style="display:none;">
+            <div class="fc-meaning" id="fcMeaning"></div>
+            <div class="fc-example" id="fcExample"></div>
+          </div>
+          <div class="fc-controls">
+            <button class="btn btn-danger" id="fcReviewBtn">🔁 需複習（提高出現率）</button>
+            <button class="btn btn-success" id="fcMasterBtn">✅ 已熟記（+10 EXP）</button>
+          </div>
+        </div>
+
+        <div class="stat-boxes" style="margin-top:16px;margin-bottom:0;">
+          <div class="stat-box">
+            <div class="stat-val" id="vocabTotalStat">0</div>
+            <div class="stat-lbl">總單字數</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="vocabMasteredStat" style="color:var(--green);">0</div>
+            <div class="stat-lbl">已熟記</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-val" id="vocabReviewStat" style="color:var(--amber);">0</div>
+            <div class="stat-lbl">待加強複習</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Vocab & List -->
+      <div class="card">
+        <div class="card-title">
+          <span>📖 單字庫管理</span>
+          <button class="btn btn-primary btn-sm" id="toggleAddVocabBtn">＋ 新增單字</button>
+        </div>
+
+        <form id="addVocabForm" style="display:none;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px;background:rgba(31,35,40,0.03);border-radius:14px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <input type="text" class="input" id="vWord" placeholder="英文拼字 (e.g. Ubiquitous)" required>
+            <input type="text" class="input" id="vPhonetic" placeholder="KK/IPA 音標 (e.g. /juːˈbɪk.wɪ.təs/)">
+          </div>
+          <div style="display:grid;grid-template-columns:100px 1fr;gap:8px;">
+            <input type="text" class="input" id="vPos" placeholder="詞性 (adj.)" required>
+            <input type="text" class="input" id="vMeaning" placeholder="精準中文釋義" required>
+          </div>
+          <input type="text" class="input" id="vExample" placeholder="英文例句" required>
+          <button type="submit" class="btn btn-primary btn-sm">儲存至單字庫</button>
+        </form>
+
+        <input type="text" class="input" id="vocabSearchInput" placeholder="搜尋單字或中文釋義..." style="margin-bottom:10px;">
+        <div class="vocab-list" id="vocabList"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: FOCUS & WHITE NOISE -->
+  <section class="tab-panel" id="panel-focus">
+    <div class="grid-equal">
+      <!-- Pomodoro -->
+      <div class="card pomo-wrap">
+        <div class="card-title" style="width:100%;">
+          <span>🍅 番茄鐘計時器</span>
+          <div class="pill-group">
+            <button class="filter-pill active" id="pomoFocusModeBtn">專注模式</button>
+            <button class="filter-pill" id="pomoBreakModeBtn">休息模式</button>
+          </div>
+        </div>
+
+        <div class="pomo-ring-box">
+          <svg viewBox="0 0 220 220">
+            <circle cx="110" cy="110" r="98" fill="none" stroke="rgba(31,35,40,0.08)" stroke-width="12"/>
+            <circle id="pomoProgressCircle" cx="110" cy="110" r="98" fill="none" stroke="#F47B5B" stroke-width="12" stroke-linecap="round" stroke-dasharray="615.75" stroke-dashoffset="0"/>
+          </svg>
+          <div class="pomo-time-overlay">
+            <div class="pomo-digits" id="pomoDigits">25:00</div>
+            <div class="pomo-mode-label" id="pomoModeLabel">專注中</div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-bottom:18px;">
+          <button class="btn btn-primary" id="pomoStartBtn" style="min-width:110px;">▶ 開始</button>
+          <button class="btn btn-secondary" id="pomoResetBtn">↺ 重置</button>
+        </div>
+
+        <div style="display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--muted);">
+          <label style="display:flex;align-items:center;gap:6px;">
+            專注(分)
+            <input type="number" id="pomoFocusMins" class="input" value="25" min="1" max="120" style="width:68px;padding:6px 8px;">
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;">
+            休息(分)
+            <input type="number" id="pomoBreakMins" class="input" value="5" min="1" max="60" style="width:68px;padding:6px 8px;">
+          </label>
+          <button class="btn btn-secondary btn-sm" id="pomoApplyMinsBtn">套用時間</button>
+        </div>
+      </div>
+
+      <!-- White Noise -->
+      <div class="card">
+        <div class="card-title">
+          <span>🎧 專注白噪音合成器（Web Audio API）</span>
+          <button class="btn btn-danger btn-sm" id="stopAllNoiseBtn">全部靜音</button>
+        </div>
+        <p style="margin:0 0 14px;font-size:13px;color:var(--muted);">
+          純瀏覽器原生音訊合成，無需外部音檔，支援自由混音與獨立音量控制。
+        </p>
+        <div class="noise-card">
+          <div class="noise-item" id="noise-rain">
+            <div class="noise-top">
+              <div><strong>🌧️ 雨聲（Rain）</strong><div style="font-size:12px;color:var(--muted);">溫潤濾波雨滴與環境白噪</div></div>
+              <button class="btn btn-secondary btn-sm noise-toggle" data-noise="rain">▶ 播放</button>
+            </div>
+            <input type="range" class="noise-slider" data-noise="rain" min="0" max="1" step="0.01" value="0.45">
+          </div>
+
+          <div class="noise-item" id="noise-cafe">
+            <div class="noise-top">
+              <div><strong>☕ 咖啡廳環境音（Cafe）</strong><div style="font-size:12px;color:var(--muted);">低頻暖聲交談氛圍與室內共鳴</div></div>
+              <button class="btn btn-secondary btn-sm noise-toggle" data-noise="cafe">▶ 播放</button>
+            </div>
+            <input type="range" class="noise-slider" data-noise="cafe" min="0" max="1" step="0.01" value="0.45">
+          </div>
+
+          <div class="noise-item" id="noise-forest">
+            <div class="noise-top">
+              <div><strong>🌲 森林風聲（Forest Wind）</strong><div style="font-size:12px;color:var(--muted);">LFO 動態掃頻微風吹拂樹梢</div></div>
+              <button class="btn btn-secondary btn-sm noise-toggle" data-noise="forest">▶ 播放</button>
+            </div>
+            <input type="range" class="noise-slider" data-noise="forest" min="0" max="1" step="0.01" value="0.45">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 5: ACHIEVEMENTS -->
+  <section class="tab-panel" id="panel-achievements">
+    <div class="card" style="margin-bottom:18px;">
+      <div class="card-title"><span>📊 個人成長檔案</span></div>
+      <div class="stat-boxes" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-box">
+          <div class="stat-val" id="statLevel">Lv.1</div>
+          <div class="stat-lbl">目前等級</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statTotalExp">0</div>
+          <div class="stat-lbl">累積經驗值</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statCompletedTasks">0</div>
+          <div class="stat-lbl">累計完成任務</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="statPomodoros">0</div>
+          <div class="stat-lbl">完成番茄鐘數</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span>🏆 成就徽章系統</span></div>
+      <div class="ach-grid" id="achievementsGrid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- Morning Planning Modal -->
+<div class="modal-backdrop" id="morningModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">☀️ 晨間規劃：鎖定今日 Top 3</h3>
+      <button class="icon-btn" onclick="closeModal('morningModal')">✕</button>
+    </div>
+    <p style="margin:0 0 12px;font-size:14px;color:var(--muted);">
+      從目前的待辦事項中挑選最多 3 件最重要的任務，置頂於主畫面專注推進：
+    </p>
+    <div id="morningTaskPicker" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;margin-bottom:14px;"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;">
+      <button class="btn btn-secondary" onclick="closeModal('morningModal')">稍後再說</button>
+      <button class="btn btn-primary" id="saveMorningTop3Btn">鎖定今日 Top 3</button>
+    </div>
+  </div>
+</div>
+
+<!-- Evening Review Modal -->
+<div class="modal-backdrop" id="eveningModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">🌙 晚間回顧儀式</h3>
+      <button class="icon-btn" onclick="closeModal('eveningModal')">✕</button>
+    </div>
+    <div class="stat-boxes">
+      <div class="stat-box">
+        <div class="stat-val" id="evRate">0%</div>
+        <div class="stat-lbl">今日任務完成率</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="evExp">+0</div>
+        <div class="stat-lbl">今日獲得 EXP</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="evVocab">0</div>
+        <div class="stat-lbl">今日背誦單字</div>
+      </div>
+    </div>
+    <h4 style="margin:14px 0 8px;font-size:14px;">今日尚未完成的任務：</h4>
+    <div id="evUnfinishedList" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;margin-bottom:14px;"></div>
+    <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-primary" id="rolloverTomorrowBtn">⏭️ 全部順延至明天</button>
+      <button class="btn btn-secondary" id="completeEveningBtn">完成今日回顧</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Task Modal -->
+<div class="modal-backdrop" id="editTaskModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">✏️ 編輯任務</h3>
+      <button class="icon-btn" onclick="closeModal('editTaskModal')">✕</button>
+    </div>
+    <form id="editTaskForm" style="display:flex;flex-direction:column;gap:10px;">
+      <input type="hidden" id="editTaskId">
+      <label style="font-size:13px;font-weight:600;">任務名稱
+        <input type="text" class="input" id="editTaskTitle" required style="margin-top:4px;">
+      </label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <label style="font-size:13px;font-weight:600;">優先級
+          <select class="select" id="editTaskPriority" style="margin-top:4px;">
+            <option value="high">高優先</option>
+            <option value="medium">中優先</option>
+            <option value="low">低優先</option>
+          </select>
+        </label>
+        <label style="font-size:13px;font-weight:600;">分類標籤
+          <input type="text" class="input" id="editTaskCategory" list="categoryOptions" style="margin-top:4px;">
+        </label>
+      </div>
+      <label style="font-size:13px;font-weight:600;">截止日期
+        <input type="date" class="input" id="editTaskDue" style="margin-top:4px;">
+      </label>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('editTaskModal')">取消</button>
+        <button type="submit" class="btn btn-primary">儲存變更</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+(() => {
+  const STORAGE_KEY = 'wesley_todo_app_v1';
+
+  const todayStr = () => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  };
+
+  const tomorrowStr = () => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  const DEFAULT_VOCAB = [
+    { id: 'v1', word: 'Ubiquitous', phonetic: '/juːˈbɪk.wɪ.təs/', pos: 'adj.', meaning: '無所不在的、普遍存在的', example: 'Smartphones have become ubiquitous in modern academic and professional life.', status: 'new', weight: 3 },
+    { id: 'v2', word: 'Ephemeral', phonetic: '/ɪˈfem.ər.əl/', pos: 'adj.', meaning: '短暫的、轉瞬即逝的', example: 'Fame on social media is often ephemeral, fading as quickly as it arrives.', status: 'new', weight: 3 },
+    { id: 'v3', word: 'Pragmatic', phonetic: '/præɡˈmæt.ɪk/', pos: 'adj.', meaning: '務實的、講求實效的', example: 'The committee adopted a pragmatic approach to solving the budget shortfall.', status: 'new', weight: 3 },
+    { id: 'v4', word: 'Mitigate', phonetic: '/ˈmɪt.ɪ.ɡeɪt/', pos: 'v.', meaning: '減輕、緩和（傷害或風險）', example: 'Strict encryption protocols were implemented to mitigate data breach risks.', status: 'new', weight: 3 },
+    { id: 'v5', word: 'Ambiguous', phonetic: '/æmˈbɪɡ.ju.əs/', pos: 'adj.', meaning: '模稜兩可的、含糊不清的', example: 'The contract contained ambiguous clauses that led to a legal dispute.', status: 'new', weight: 3 },
+    { id: 'v6', word: 'Corroborate', phonetic: '/kəˈrɒb.ə.reɪt/', pos: 'v.', meaning: '證實、確證（理論或陳述）', example: 'Recent archaeological findings corroborate the historian’s hypothesis.', status: 'new', weight: 3 },
+    { id: 'v7', word: 'Disparate', phonetic: '/ˈdɪs.pər.ət/', pos: 'adj.', meaning: '截然不同的、無法比較的', example: 'The research synthesizes data from disparate fields such as linguistics and neuroscience.', status: 'new', weight: 3 },
+    { id: 'v8', word: 'Equivocal', phonetic: '/ɪˈkwɪv.ə.kəl/', pos: 'adj.', meaning: '含糊其辭的、可作多種解釋的', example: 'Her equivocal response left the audience unsure of her true stance.', status: 'new', weight: 3 },
+    { id: 'v9', word: 'Fastidious', phonetic: '/fæsˈtɪd.i.əs/', pos: 'adj.', meaning: '一絲不苟的、挑剔的', example: 'He is fastidious about citing every primary source accurately.', status: 'new', weight: 3 },
+    { id: 'v10', word: 'Gregarious', phonetic: '/ɡrɪˈɡeə.ri.əs/', pos: 'adj.', meaning: '愛交際的、群居的', example: 'Despite her gregarious nature, she prefers studying alone in silence.', status: 'new', weight: 3 },
+    { id: 'v11', word: 'Iconoclast', phonetic: '/aɪˈkɒn.ə.klæst/', pos: 'n.', meaning: '打破傳統觀念者、反叛者', example: 'As a scientific iconoclast, she challenged decades of established dogma.', status: 'new', weight: 3 },
+    { id: 'v12', word: 'Laconic', phonetic: '/ləˈkɒn.ɪk/', pos: 'adj.', meaning: '言簡意賅的、簡練的', example: 'His laconic summary captured the entire argument in just two sentences.', status: 'new', weight: 3 },
+    { id: 'v13', word: 'Magnanimous', phonetic: '/mæɡˈnæn.ɪ.məs/', pos: 'adj.', meaning: '寬宏大量的、慷慨的', example: 'In a magnanimous gesture, the winner praised her opponent’s resilience.', status: 'new', weight: 3 },
+    { id: 'v14', word: 'Nefarious', phonetic: '/nɪˈfeə.ri.əs/', pos: 'adj.', meaning: '邪惡的、不法的', example: 'Cybersecurity analysts uncovered a nefarious scheme targeting financial institutions.', status: 'new', weight: 3 },
+    { id: 'v15', word: 'Obfuscate', phonetic: '/ˈɒb.fʌs.keɪt/', pos: 'v.', meaning: '使模糊、刻意混淆視聽', example: 'Excessive jargon tends to obfuscate rather than clarify complex ideas.', status: 'new', weight: 3 },
+    { id: 'v16', word: 'Pernicious', phonetic: '/pəˈnɪʃ.əs/', pos: 'adj.', meaning: '有害的、惡性的、潛移默化造成傷害的', example: 'Chronic sleep deprivation has a pernicious effect on cognitive performance.', status: 'new', weight: 3 },
+    { id: 'v17', word: 'Quixotic', phonetic: '/kwɪkˈsɒt.ɪk/', pos: 'adj.', meaning: '不切實際的、唐吉訶德式的', example: 'Critics dismissed the plan to colonize Mars within five years as quixotic.', status: 'new', weight: 3 },
+    { id: 'v18', word: 'Recalcitrant', phonetic: '/rɪˈkæl.sɪ.trənt/', pos: 'adj.', meaning: '頑強反抗的、難以管教的', example: 'The mediator struggled to negotiate with recalcitrant stakeholders.', status: 'new', weight: 3 },
+    { id: 'v19', word: 'Sagacious', phonetic: '/səˈɡeɪ.ʃəs/', pos: 'adj.', meaning: '睿智的、有洞察力的', example: 'Her sagacious mentorship guided the lab through its most difficult project.', status: 'new', weight: 3 },
+    { id: 'v20', word: 'Taciturn', phonetic: '/ˈtæs.ɪ.tɜːn/', pos: 'adj.', meaning: '沉默寡言的', example: 'Though taciturn in meetings, his written reports were remarkably thorough.', status: 'new', weight: 3 },
+    { id: 'v21', word: 'Venerable', phonetic: '/ˈven.ər.ə.bəl/', pos: 'adj.', meaning: '德高望重的、古老而受尊敬的', example: 'The venerable institution has trained leading scholars for three centuries.', status: 'new', weight: 3 },
+    { id: 'v22', word: 'Zealous', phonetic: '/ˈzel.əs/', pos: 'adj.', meaning: '熱忱的、狂熱的', example: 'The zealous volunteers worked tirelessly to restore the coastal habitat.', status: 'new', weight: 3 },
+    { id: 'v23', word: 'Alacrity', phonetic: '/əˈlæk.rə.ti/', pos: 'n.', meaning: '欣然同意、敏捷、樂意', example: 'She accepted the fellowship offer with unmistakable alacrity.', status: 'new', weight: 3 },
+    { id: 'v24', word: 'Cacophony', phonetic: '/kəˈkɒf.ə.ni/', pos: 'n.', meaning: '刺耳的雜音、不和諧音', example: 'Noise-canceling headphones shielded him from the cacophony of rush-hour traffic.', status: 'new', weight: 3 },
+    { id: 'v25', word: 'Enervate', phonetic: '/ˈen.ə.veɪt/', pos: 'v.', meaning: '使衰弱、使精疲力竭', example: 'The oppressive humidity began to enervate the marathon runners.', status: 'new', weight: 3 },
+    { id: 'v26', word: 'Garrulous', phonetic: '/ˈɡær.əl.əs/', pos: 'adj.', meaning: '喋喋不休的、饒舌的', example: 'A garrulous passenger recounted his entire life story during the flight.', status: 'new', weight: 3 },
+    { id: 'v27', word: 'Inexorable', phonetic: '/ɪˈnek.sər.ə.bəl/', pos: 'adj.', meaning: '不可阻擋的、無情的', example: 'The inexorable pace of technological change demands lifelong learning.', status: 'new', weight: 3 },
+    { id: 'v28', word: 'Lucid', phonetic: '/ˈluː.sɪd/', pos: 'adj.', meaning: '清晰易懂的、頭腦清醒的', example: 'The professor delivered a lucid explanation of quantum entanglement.', status: 'new', weight: 3 },
+    { id: 'v29', word: 'Ostentatious', phonetic: '/ˌɒs.tenˈteɪ.ʃəs/', pos: 'adj.', meaning: '炫耀的、鋪張的', example: 'They preferred minimalist elegance over ostentatious displays of wealth.', status: 'new', weight: 3 },
+    { id: 'v30', word: 'Sycophant', phonetic: '/ˈsɪk.ə.fænt/', pos: 'n.', meaning: '阿諛奉承者、馬屁精', example: 'A wise leader surrounds herself with honest critics rather than sycophants.', status: 'new', weight: 3 }
+  ];
+
+  const ACHIEVEMENTS = [
+    { id: 'first_task', icon: '🌱', name: '初出茅廬', desc: '完成第 1 項待辦任務', check: s => s.stats.totalTasksCompleted >= 1 },
+    { id: 'focus_master', icon: '🎯', name: '專注大師', desc: '完成 1 次番茄鐘專注', check: s => s.stats.totalPomodoros >= 1 },
+    { id: 'vocab_hunter', icon: '📚', name: '詞彙獵人', desc: '熟記 5 個高難度單字', check: s => s.vocab.filter(v => v.status === 'mastered').length >= 5 },
+    { id: 'streak_pro', icon: '🔥', name: '連勝達人', desc: '累計完成 5 項任務', check: s => s.stats.totalTasksCompleted >= 5 },
+    { id: 'morning_hero', icon: '☀️', name: '高效規劃師', desc: '完成一次晨間 Top 3 規劃', check: s => s.stats.morningPlansDone >= 1 },
+    { id: 'evening_sage', icon: '🌙', name: '反思行者', desc: '完成一次晚間回顧儀式', check: s => s.stats.eveningReviewsDone >= 1 }
+  ];
+
+  function createDefaultState() {
+    const today = todayStr();
+    return {
+      tasks: [
+        {
+          id: 't1',
+          title: '精讀 GRE 高頻學術單字 10 個',
+          priority: 'high',
+          category: '學習',
+          dueDate: today,
+          completed: false,
+          subtasks: [
+            { id: 'st1', title: '完成 Flashcard 第一輪抽背', done: false },
+            { id: 'st2', title: '標記需加強複習的單字', done: false }
+          ]
+        },
+        {
+          id: 't2',
+          title: '使用番茄鐘完成 25 分鐘深度專注',
+          priority: 'medium',
+          category: '工作',
+          dueDate: today,
+          completed: false,
+          subtasks: []
+        }
+      ],
+      vocab: DEFAULT_VOCAB,
+      top3: { date: today, ids: ['t1', 't2'] },
+      gamify: {
+        exp: 0,
+        coins: 0,
+        unlockedAchievements: []
+      },
+      stats: {
+        totalTasksCompleted: 0,
+        totalPomodoros: 0,
+        morningPlansDone: 0,
+        eveningReviewsDone: 0
+      },
+      daily: {
+        date: today,
+        expEarned: 0,
+        vocabReviewed: 0,
+        pomodoros: 0,
+        morningPrompted: false
+      },
+      pomoSettings: {
+        focusMins: 25,
+        breakMins: 5
+      }
+    };
+  }
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return createDefaultState();
+      const parsed = JSON.parse(raw);
+      const def = createDefaultState();
+      const merged = {
+        ...def,
+        ...parsed,
+        gamify: { ...def.gamify, ...(parsed.gamify || {}) },
+        stats: { ...def.stats, ...(parsed.stats || {}) },
+        daily: { ...def.daily, ...(parsed.daily || {}) },
+        pomoSettings: { ...def.pomoSettings, ...(parsed.pomoSettings || {}) },
+        top3: parsed.top3 || def.top3
+      };
+      if (!Array.isArray(merged.vocab) || merged.vocab.length === 0) {
+        merged.vocab = DEFAULT_VOCAB;
+      }
+      // Reset daily counters if new day
+      const t = todayStr();
+      if (merged.daily.date !== t) {
+        merged.daily = { date: t, expEarned: 0, vocabReviewed: 0, pomodoros: 0, morningPrompted: false };
+      }
+      if (merged.top3.date !== t) {
+        merged.top3 = { date: t, ids: [] };
+      }
+      return merged;
+    } catch {
+      return createDefaultState();
+    }
+  }
+
+  let state = loadState();
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  // Toast
+  function showToast(msg) {
+    const container = document.getElementById('toastContainer');
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    container.appendChild(el);
+    setTimeout(() => el.remove(), 3200);
+  }
+
+  // Gamification
+  function addRewards(exp, coins, reason) {
+    const prevLevel = Math.floor(state.gamify.exp / 100) + 1;
+    state.gamify.exp += exp;
+    state.gamify.coins += coins;
+    state.daily.expEarned += exp;
+    const newLevel = Math.floor(state.gamify.exp / 100) + 1;
+    checkAchievements();
+    saveState();
+    renderGamifyHeader();
+    renderAchievements();
+    if (newLevel > prevLevel) {
+      showToast(`🎉 升級啦！目前等級 Lv.${newLevel}！`);
+    } else if (reason) {
+      showToast(`${reason} (+${exp} EXP${coins ? `, +${coins} 🪙` : ''})`);
+    }
+  }
+
+  function checkAchievements() {
+    ACHIEVEMENTS.forEach(a => {
+      if (!state.gamify.unlockedAchievements.includes(a.id) && a.check(state)) {
+        state.gamify.unlockedAchievements.push(a.id);
+        showToast(`🏆 解鎖成就：${a.icon} ${a.name}！`);
+      }
+    });
+  }
+
+  function renderGamifyHeader() {
+    const lvl = Math.floor(state.gamify.exp / 100) + 1;
+    const cur = state.gamify.exp % 100;
+    document.getElementById('hdrLevel').textContent = `Lv.${lvl}`;
+    document.getElementById('hdrExpFill').style.width = `${cur}%`;
+    document.getElementById('hdrExpText').textContent = `${cur}/100 EXP`;
+    document.getElementById('hdrCoins').textContent = state.gamify.coins;
+  }
+
+  function renderAchievements() {
+    const lvl = Math.floor(state.gamify.exp / 100) + 1;
+    document.getElementById('statLevel').textContent = `Lv.${lvl}`;
+    document.getElementById('statTotalExp').textContent = state.gamify.exp;
+    document.getElementById('statCompletedTasks').textContent = state.stats.totalTasksCompleted;
+    document.getElementById('statPomodoros').textContent = state.stats.totalPomodoros;
+
+    const grid = document.getElementById('achievementsGrid');
+    grid.innerHTML = ACHIEVEMENTS.map(a => {
+      const unlocked = state.gamify.unlockedAchievements.includes(a.id);
+      return `
+        <div class="ach-card ${unlocked ? 'unlocked' : 'locked'}">
+          <div class="ach-icon">${a.icon}</div>
+          <div class="ach-name">${a.name}</div>
+          <div class="ach-desc">${a.desc}</div>
+          <div style="margin-top:8px;font-size:11px;font-weight:700;color:${unlocked ? 'var(--green)' : 'var(--muted)'};">
+            ${unlocked ? '✓ 已解鎖' : '🔒 未解鎖'}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Tabs
+  document.getElementById('mainTabs').addEventListener('click', e => {
+    const btn = e.target.closest('.nav-tab');
+    if (!btn) return;
+    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
+    if (btn.dataset.tab === 'calendar') renderCalendar();
+    if (btn.dataset.tab === 'achievements') renderAchievements();
+  });
+
+  // ================== TASKS ==================
+  let currentFilter = 'all';
+  let currentCatFilter = 'all';
+  document.getElementById('taskDueInput').value = todayStr();
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+  }
+
+  function renderTop3() {
+    const container = document.getElementById('top3Container');
+    const validIds = state.top3.ids.filter(id => state.tasks.some(t => t.id === id));
+    if (validIds.length === 0) {
+      container.innerHTML = `
+        <div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--muted);font-size:13.5px;">
+          尚未鎖定今日最重要的 3 件事，點擊右上角「挑選 / 調整」或「☀️ 晨間規劃」開始！
+        </div>`;
+      return;
+    }
+    container.innerHTML = [0, 1, 2].map(idx => {
+      const id = validIds[idx];
+      const task = state.tasks.find(t => t.id === id);
+      if (!task) {
+        return `<div class="top3-slot" style="opacity:0.5;border-style:dashed;"><div class="top3-rank">${idx + 1}</div><div style="font-size:13px;color:var(--muted);">空位（可從晨間規劃加入）</div></div>`;
+      }
+      return `
+        <div class="top3-slot ${task.completed ? 'done' : ''}">
+          <div class="top3-rank">${idx + 1}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:14px;font-weight:700;${task.completed ? 'text-decoration:line-through;' : ''}">${escapeHtml(task.title)}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:3px;">${escapeHtml(task.category)} ${task.dueDate ? '· ' + task.dueDate : ''}</div>
+          </div>
+          <button class="task-check ${task.completed ? 'checked' : ''}" onclick="window._toggleTask('${task.id}')" aria-label="完成">${task.completed ? '✓' : ''}</button>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function updateCategoryDropdown() {
+    const sel = document.getElementById('taskCategoryFilter');
+    const cats = [...new Set(state.tasks.map(t => t.category).filter(Boolean))];
+    const prev = currentCatFilter;
+    sel.innerHTML = `<option value="all">所有分類</option>` + cats.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    sel.value = cats.includes(prev) ? prev : 'all';
+    currentCatFilter = sel.value;
+  }
+
+  function renderTaskItemHTML(task) {
+    const pLabel = { high: '高優先', medium: '中優先', low: '低優先' }[task.priority] || '中優先';
+    const isOverdue = task.dueDate && !task.completed && task.dueDate < todayStr();
+    const isTop3 = state.top3.ids.includes(task.id);
+    const subs = task.subtasks || [];
+    const doneSubs = subs.filter(s => s.done).length;
+    const pct = subs.length ? Math.round((doneSubs / subs.length) * 100) : 0;
+
+    return `
+      <div class="task-item ${task.completed ? 'completed' : ''}">
+        <div class="task-row">
+          <button class="task-check ${task.completed ? 'checked' : ''}" onclick="window._toggleTask('${task.id}')" aria-label="切換完成">${task.completed ? '✓' : ''}</button>
+          <div class="task-main">
+            <div class="task-title">${escapeHtml(task.title)}</div>
+            <div class="task-meta">
+              ${isTop3 ? '<span class="badge badge-top3">⭐ Top 3</span>' : ''}
+              <span class="badge badge-${task.priority}">${pLabel}</span>
+              ${task.category ? `<span class="badge badge-cat">#${escapeHtml(task.category)}</span>` : ''}
+              ${task.dueDate ? `<span class="badge ${isOverdue ? 'badge-overdue' : 'badge-date'}">📅 ${task.dueDate}${isOverdue ? ' (已逾期)' : ''}</span>` : ''}
+            </div>
+          </div>
+          <div class="task-actions">
+            <button class="icon-btn" title="編輯" onclick="window._openEditTask('${task.id}')">✏️</button>
+            <button class="icon-btn" title="刪除" onclick="window._deleteTask('${task.id}')">🗑️</button>
+          </div>
+        </div>
+        <div class="subtasks-box">
+          ${subs.length ? `
+            <div class="subtask-progress">
+              <span>子任務進度 ${doneSubs}/${subs.length} (${pct}%)</span>
+              <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+            </div>
+            ${subs.map(st => `
+              <div class="subtask-item ${st.done ? 'done' : ''}">
+                <input type="checkbox" ${st.done ? 'checked' : ''} onchange="window._toggleSubtask('${task.id}','${st.id}')">
+                <span style="flex:1;">${escapeHtml(st.title)}</span>
+                <button class="icon-btn" style="width:24px;height:24px;font-size:12px;" onclick="window._deleteSubtask('${task.id}','${st.id}')">✕</button>
+              </div>
+            `).join('')}
+          ` : ''}
+          <div class="subtask-add-row">
+            <input type="text" class="input" id="sub-input-${task.id}" placeholder="新增子任務..." style="padding:6px 10px;font-size:13px;" onkeydown="if(event.key==='Enter'){event.preventDefault();window._addSubtask('${task.id}');}">
+            <button class="btn btn-secondary btn-sm" onclick="window._addSubtask('${task.id}')">＋</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderTasks() {
+    updateCategoryDropdown();
+    renderTop3();
+    const list = document.getElementById('taskList');
+    const filtered = state.tasks.filter(t => {
+      if (currentFilter === 'active' && t.completed) return false;
+      if (currentFilter === 'completed' && !t.completed) return false;
+      if (currentCatFilter !== 'all' && t.category !== currentCatFilter) return false;
+      return true;
+    });
+    const activeCount = state.tasks.filter(t => !t.completed).length;
+    document.getElementById('taskSummaryText').textContent = `共 ${state.tasks.length} 項 · ${activeCount} 項進行中`;
+
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="empty-state">目前沒有符合條件的任務 ✨</div>`;
+      return;
+    }
+    list.innerHTML = filtered.map(renderTaskItemHTML).join('');
+  }
+
+  document.getElementById('addTaskForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('taskTitleInput').value.trim();
+    if (!title) return;
+    state.tasks.unshift({
+      id: 't_' + Date.now(),
+      title,
+      priority: document.getElementById('taskPriorityInput').value,
+      category: document.getElementById('taskCategoryInput').value.trim() || '一般',
+      dueDate: document.getElementById('taskDueInput').value || '',
+      completed: false,
+      subtasks: []
+    });
+    document.getElementById('taskTitleInput').value = '';
+    saveState();
+    renderTasks();
+    renderCalendar();
+    showToast('已新增任務');
+  });
+
+  document.getElementById('taskFilterGroup').addEventListener('click', e => {
+    const btn = e.target.closest('.filter-pill');
+    if (!btn) return;
+    document.querySelectorAll('#taskFilterGroup .filter-pill').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    renderTasks();
+  });
+
+  document.getElementById('taskCategoryFilter').addEventListener('change', e => {
+    currentCatFilter = e.target.value;
+    renderTasks();
+  });
+
+  document.getElementById('clearCompletedBtn').addEventListener('click', () => {
+    const before = state.tasks.length;
+    state.tasks = state.tasks.filter(t => !t.completed);
+    state.top3.ids = state.top3.ids.filter(id => state.tasks.some(t => t.id === id));
+    if (state.tasks.length < before) {
+      saveState();
+      renderTasks();
+      renderCalendar();
+      showToast(`已清除 ${before - state.tasks.length} 項已完成任務`);
+    }
+  });
+
+  window._toggleTask = id => {
+    const t = state.tasks.find(x => x.id === id);
+    if (!t) return;
+    t.completed = !t.completed;
+    if (t.completed) {
+      state.stats.totalTasksCompleted += 1;
+      addRewards(20, 10, '完成任務！');
+    } else {
+      saveState();
+    }
+    renderTasks();
+    renderCalendar();
+  };
+
+  window._deleteTask = id => {
+    state.tasks = state.tasks.filter(x => x.id !== id);
+    state.top3.ids = state.top3.ids.filter(x => x !== id);
+    saveState();
+    renderTasks();
+    renderCalendar();
+  };
+
+  window._addSubtask = taskId => {
+    const input = document.getElementById(`sub-input-${taskId}`);
+    const val = input ? input.value.trim() : '';
+    if (!val) return;
+    const t = state.tasks.find(x => x.id === taskId);
+    if (!t) return;
+    t.subtasks = t.subtasks || [];
+    t.subtasks.push({ id: 'st_' + Date.now(), title: val, done: false });
+    saveState();
+    renderTasks();
+    renderCalendar();
+  };
+
+  window._toggleSubtask = (taskId, subId) => {
+    const t = state.tasks.find(x => x.id === taskId);
+    if (!t) return;
+    const st = (t.subtasks || []).find(s => s.id === subId);
+    if (!st) return;
+    st.done = !st.done;
+    if (st.done) addRewards(5, 2, '完成子任務');
+    else saveState();
+    renderTasks();
+    renderCalendar();
+  };
+
+  window._deleteSubtask = (taskId, subId) => {
+    const t = state.tasks.find(x => x.id === taskId);
+    if (!t) return;
+    t.subtasks = (t.subtasks || []).filter(s => s.id !== subId);
+    saveState();
+    renderTasks();
+    renderCalendar();
+  };
+
+  window._openEditTask = id => {
+    const t = state.tasks.find(x => x.id === id);
+    if (!t) return;
+    document.getElementById('editTaskId').value = t.id;
+    document.getElementById('editTaskTitle').value = t.title;
+    document.getElementById('editTaskPriority').value = t.priority;
+    document.getElementById('editTaskCategory').value = t.category || '';
+    document.getElementById('editTaskDue').value = t.dueDate || '';
+    openModal('editTaskModal');
+  };
+
+  document.getElementById('editTaskForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const id = document.getElementById('editTaskId').value;
+    const t = state.tasks.find(x => x.id === id);
+    if (!t) return;
+    t.title = document.getElementById('editTaskTitle').value.trim();
+    t.priority = document.getElementById('editTaskPriority').value;
+    t.category = document.getElementById('editTaskCategory').value.trim() || '一般';
+    t.dueDate = document.getElementById('editTaskDue').value;
+    saveState();
+    closeModal('editTaskModal');
+    renderTasks();
+    renderCalendar();
+    showToast('已更新任務');
+  });
+
+  // ================== CALENDAR ==================
+  let calDate = new Date();
+  let selectedDateStr = todayStr();
+
+  function renderCalendar() {
+    const y = calDate.getFullYear();
+    const m = calDate.getMonth();
+    document.getElementById('calMonthLabel').textContent = `${y} 年 ${m + 1} 月`;
+
+    const firstDay = new Date(y, m, 1).getDay();
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    const prevDays = new Date(y, m, 0).getDate();
+    const today = todayStr();
+
+    const dows = ['日', '一', '二', '三', '四', '五', '六'];
+    let html = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+    for (let i = firstDay - 1; i >= 0; i--) {
+      html += `<div class="cal-cell other-month"><div class="cal-day-num">${prevDays - i}</div></div>`;
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+      const dayTasks = state.tasks.filter(t => t.dueDate === ds);
+      const cls = ['cal-cell'];
+      if (ds === today) cls.push('today');
+      if (ds === selectedDateStr) cls.push('selected');
+      html += `
+        <div class="${cls.join(' ')}" onclick="window._selectCalDate('${ds}')">
+          <div class="cal-day-num">${day}</div>
+          <div class="cal-dots">
+            ${dayTasks.length ? `<span class="cal-count">${dayTasks.length} 項</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById('calGrid').innerHTML = html;
+    renderSelectedDateTasks();
+  }
+
+  function renderSelectedDateTasks() {
+    document.getElementById('calSelectedDateTitle').textContent = `📅 ${selectedDateStr} 的待辦事項`;
+    const dayTasks = state.tasks.filter(t => t.dueDate === selectedDateStr);
+    const list = document.getElementById('calTaskList');
+    if (dayTasks.length === 0) {
+      list.innerHTML = `<div class="empty-state">這一天目前沒有安排任務</div>`;
+      return;
+    }
+    list.innerHTML = dayTasks.map(renderTaskItemHTML).join('');
+  }
+
+  window._selectCalDate = ds => {
+    selectedDateStr = ds;
+    renderCalendar();
+  };
+
+  document.getElementById('calPrevBtn').addEventListener('click', () => {
+    calDate.setMonth(calDate.getMonth() - 1);
+    renderCalendar();
+  });
+  document.getElementById('calNextBtn').addEventListener('click', () => {
+    calDate.setMonth(calDate.getMonth() + 1);
+    renderCalendar();
+  });
+  document.getElementById('calTodayBtn').addEventListener('click', () => {
+    calDate = new Date();
+    selectedDateStr = todayStr();
+    renderCalendar();
+  });
+
+  document.getElementById('calAddTaskForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('calTaskTitle').value.trim();
+    if (!title) return;
+    state.tasks.unshift({
+      id: 't_' + Date.now(),
+      title,
+      priority: document.getElementById('calTaskPriority').value,
+      category: '排程',
+      dueDate: selectedDateStr,
+      completed: false,
+      subtasks: []
+    });
+    document.getElementById('calTaskTitle').value = '';
+    saveState();
+    renderTasks();
+    renderCalendar();
+    showToast(`已於 ${selectedDateStr} 新增任務`);
+  });
+
+  // ================== VOCABULARY ==================
+  let currentVocabIdx = 0;
+
+  function pickNextVocab() {
+    if (state.vocab.length === 0) return;
+    const isRandom = document.getElementById('fcRandomToggle').checked;
+    if (!isRandom) {
+      currentVocabIdx = (currentVocabIdx + 1) % state.vocab.length;
+    } else {
+      // Weighted spaced repetition: review=6, new=3, mastered=1
+      const totalWeight = state.vocab.reduce((acc, v) => acc + (v.weight || 3), 0);
+      let r = Math.random() * totalWeight;
+      let chosen = 0;
+      for (let i = 0; i < state.vocab.length; i++) {
+        r -= (state.vocab[i].weight || 3);
+        if (r <= 0) {
+          chosen = i;
+          break;
+        }
+      }
+      if (state.vocab.length > 1 && chosen === currentVocabIdx) {
+        chosen = (chosen + 1) % state.vocab.length;
+      }
+      currentVocabIdx = chosen;
+    }
+    renderFlashcard();
+  }
+
+  function renderFlashcard() {
+    const v = state.vocab[currentVocabIdx];
+    if (!v) return;
+    document.getElementById('fcWord').textContent = v.word;
+    document.getElementById('fcPhonetic').textContent = `${v.phonetic || ''}  ${v.pos}`;
+    document.getElementById('fcMeaning').textContent = v.meaning;
+    document.getElementById('fcExample').textContent = `"${v.example}"`;
+    document.getElementById('fcRevealBox').style.display = 'none';
+    document.getElementById('fcRevealBtn').style.display = 'inline-flex';
+
+    const statusMap = {
+      mastered: '<span class="badge badge-low">✅ 已熟記</span>',
+      review: '<span class="badge badge-high">🔁 需複習</span>',
+      new: '<span class="badge badge-cat">✨ 新單字</span>'
+    };
+    document.getElementById('fcStatusBadge').innerHTML = statusMap[v.status] || statusMap.new;
+    renderVocabStats();
+  }
+
+  function renderVocabStats() {
+    document.getElementById('vocabTotalStat').textContent = state.vocab.length;
+    document.getElementById('vocabMasteredStat').textContent = state.vocab.filter(v => v.status === 'mastered').length;
+    document.getElementById('vocabReviewStat').textContent = state.vocab.filter(v => v.status === 'review').length;
+  }
+
+  function renderVocabList() {
+    const q = document.getElementById('vocabSearchInput').value.trim().toLowerCase();
+    const list = document.getElementById('vocabList');
+    const items = state.vocab.filter(v =>
+      !q || v.word.toLowerCase().includes(q) || v.meaning.toLowerCase().includes(q)
+    );
+    if (items.length === 0) {
+      list.innerHTML = `<div class="empty-state">找不到相符的單字</div>`;
+      return;
+    }
+    list.innerHTML = items.map(v => `
+      <div class="vocab-row">
+        <div>
+          <div style="font-weight:700;font-size:15px;">${escapeHtml(v.word)} <span style="font-weight:400;font-size:12.5px;color:var(--muted);">${escapeHtml(v.phonetic || '')} ${escapeHtml(v.pos)}</span></div>
+          <div style="font-size:13.5px;margin-top:2px;">${escapeHtml(v.meaning)}</div>
+          <div style="font-size:12px;color:var(--muted);font-style:italic;margin-top:2px;">${escapeHtml(v.example)}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+          <span class="badge ${v.status === 'mastered' ? 'badge-low' : v.status === 'review' ? 'badge-high' : 'badge-cat'}">
+            ${v.status === 'mastered' ? '已熟記' : v.status === 'review' ? '需複習' : '未分類'}
+          </span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  document.getElementById('fcRevealBtn').addEventListener('click', () => {
+    document.getElementById('fcRevealBox').style.display = 'block';
+    document.getElementById('fcRevealBtn').style.display = 'none';
+  });
+
+  document.getElementById('fcNextBtn').addEventListener('click', pickNextVocab);
+
+  document.getElementById('fcReviewBtn').addEventListener('click', () => {
+    const v = state.vocab[currentVocabIdx];
+    if (!v) return;
+    v.status = 'review';
+    v.weight = 7; // Higher frequency
+    state.daily.vocabReviewed += 1;
+    addRewards(5, 2, `已標記「${v.word}」需加強複習`);
+    renderVocabList();
+    pickNextVocab();
+  });
+
+  document.getElementById('fcMasterBtn').addEventListener('click', () => {
+    const v = state.vocab[currentVocabIdx];
+    if (!v) return;
+    v.status = 'mastered';
+    v.weight = 1; // Lower frequency
+    state.daily.vocabReviewed += 1;
+    addRewards(10, 5, `已熟記「${v.word}」！`);
+    renderVocabList();
+    pickNextVocab();
+  });
+
+  document.getElementById('toggleAddVocabBtn').addEventListener('click', () => {
+    const f = document.getElementById('addVocabForm');
+    f.style.display = f.style.display === 'none' ? 'flex' : 'none';
+  });
+
+  document.getElementById('addVocabForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const word = document.getElementById('vWord').value.trim();
+    const phonetic = document.getElementById('vPhonetic').value.trim();
+    const pos = document.getElementById('vPos').value.trim();
+    const meaning = document.getElementById('vMeaning').value.trim();
+    const example = document.getElementById('vExample').value.trim();
+    if (!word || !meaning) return;
+    state.vocab.unshift({ id: 'v_' + Date.now(), word, phonetic, pos, meaning, example, status: 'new', weight: 4 });
+    e.target.reset();
+    e.target.style.display = 'none';
+    saveState();
+    renderVocabStats();
+    renderVocabList();
+    showToast(`已新增單字「${word}」至記憶庫`);
+  });
+
+  document.getElementById('vocabSearchInput').addEventListener('input', renderVocabList);
+
+  // ================== POMODORO ==================
+  let pomoMode = 'focus'; // 'focus' | 'break'
+  let pomoTotalSec = state.pomoSettings.focusMins * 60;
+  let pomoLeftSec = pomoTotalSec;
+  let pomoInterval = null;
+  const RING_CIRC = 2 * Math.PI * 98;
+
+  document.getElementById('pomoFocusMins').value = state.pomoSettings.focusMins;
+  document.getElementById('pomoBreakMins').value = state.pomoSettings.breakMins;
+
+  function renderPomo() {
+    const m = String(Math.floor(pomoLeftSec / 60)).padStart(2, '0');
+    const s = String(pomoLeftSec % 60).padStart(2, '0');
+    document.getElementById('pomoDigits').textContent = `${m}:${s}`;
+    document.getElementById('pomoModeLabel').textContent = pomoMode === 'focus' ? '專注模式' : '休息模式';
+    const progress = pomoTotalSec > 0 ? (1 - pomoLeftSec / pomoTotalSec) : 0;
+    const circle = document.getElementById('pomoProgressCircle');
+    circle.style.strokeDashoffset = RING_CIRC * progress;
+    circle.style.stroke = pomoMode === 'focus' ? '#F47B5B' : '#3E9B6E';
+  }
+
+  function playChime() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(528, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.3);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.0);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 1.0);
+    } catch {}
+  }
+
+  function setPomoMode(mode) {
+    clearInterval(pomoInterval);
+    pomoInterval = null;
+    document.getElementById('pomoStartBtn').textContent = '▶ 開始';
+    pomoMode = mode;
+    pomoTotalSec = (mode === 'focus' ? state.pomoSettings.focusMins : state.pomoSettings.breakMins) * 60;
+    pomoLeftSec = pomoTotalSec;
+    document.getElementById('pomoFocusModeBtn').classList.toggle('active', mode === 'focus');
+    document.getElementById('pomoBreakModeBtn').classList.toggle('active', mode === 'break');
+    renderPomo();
+  }
+
+  document.getElementById('pomoFocusModeBtn').addEventListener('click', () => setPomoMode('focus'));
+  document.getElementById('pomoBreakModeBtn').addEventListener('click', () => setPomoMode('break'));
+
+  document.getElementById('pomoStartBtn').addEventListener('click', () => {
+    if (pomoInterval) {
+      clearInterval(pomoInterval);
+      pomoInterval = null;
+      document.getElementById('pomoStartBtn').textContent = '▶ 繼續';
+      return;
+    }
+    document.getElementById('pomoStartBtn').textContent = '⏸ 暫停';
+    pomoInterval = setInterval(() => {
+      pomoLeftSec--;
+      if (pomoLeftSec <= 0) {
+        clearInterval(pomoInterval);
+        pomoInterval = null;
+        playChime();
+        if (pomoMode === 'focus') {
+          state.stats.totalPomodoros += 1;
+          state.daily.pomodoros += 1;
+          addRewards(35, 20, '🍅 完成一個番茄鐘專注！');
+          setPomoMode('break');
+        } else {
+          showToast('☕ 休息結束，準備開始下一輪專注！');
+          setPomoMode('focus');
+        }
+        return;
+      }
+      renderPomo();
+    }, 1000);
+  });
+
+  document.getElementById('pomoResetBtn').addEventListener('click', () => setPomoMode(pomoMode));
+
+  document.getElementById('pomoApplyMinsBtn').addEventListener('click', () => {
+    const f = Math.max(1, Math.min(120, parseInt(document.getElementById('pomoFocusMins').value, 10) || 25));
+    const b = Math.max(1, Math.min(60, parseInt(document.getElementById('pomoBreakMins').value, 10) || 5));
+    state.pomoSettings = { focusMins: f, breakMins: b };
+    saveState();
+    setPomoMode(pomoMode);
+    showToast(`已更新番茄鐘：專注 ${f} 分 / 休息 ${b} 分`);
+  });
+
+  // ================== WHITE NOISE (WEB AUDIO API) ==================
+  let audioCtx = null;
+  const activeNoises = {};
+
+  function getAudioCtx() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function createNoiseBuffer(ctx, type) {
+    const bufferSize = ctx.sampleRate * 3;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    if (type === 'white') {
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    } else if (type === 'pink') {
+      let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const w = Math.random() * 2 - 1;
+        b0 = 0.99886 * b0 + w * 0.0555179;
+        b1 = 0.99332 * b1 + w * 0.0750759;
+        b2 = 0.96900 * b2 + w * 0.1538520;
+        b3 = 0.86650 * b3 + w * 0.3104856;
+        b4 = 0.55000 * b4 + w * 0.5329522;
+        b5 = -0.7616 * b5 - w * 0.0168980;
+        data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + b6 + w * 0.5362) * 0.04;
+        b6 = w * 0.115926;
+      }
+    } else {
+      // Brown noise
+      let lastOut = 0;
+      for (let i = 0; i < bufferSize; i++) {
+        const w = Math.random() * 2 - 1;
+        data[i] = (lastOut + 0.02 * w) / 1.02;
+        lastOut = data[i];
+        data[i] *= 2.5;
+      }
+    }
+    return buffer;
+  }
+
+  function startNoise(kind, vol) {
+    const ctx = getAudioCtx();
+    const src = ctx.createBufferSource();
+    src.loop = true;
+
+    const gain = ctx.createGain();
+    gain.gain.value = vol;
+
+    let extraNodes = [];
+    if (kind === 'rain') {
+      src.buffer = createNoiseBuffer(ctx, 'pink');
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.value = 1400;
+      src.connect(filter);
+      filter.connect(gain);
+      extraNodes.push(filter);
+    } else if (kind === 'cafe') {
+      src.buffer = createNoiseBuffer(ctx, 'brown');
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 420;
+      filter.Q.value = 0.7;
+      src.connect(filter);
+      filter.connect(gain);
+      extraNodes.push(filter);
+    } else if (kind === 'forest') {
+      src.buffer = createNoiseBuffer(ctx, 'pink');
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 600;
+      filter.Q.value = 1.4;
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.frequency.value = 0.18;
+      lfoGain.gain.value = 280;
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      lfo.start();
+      src.connect(filter);
+      filter.connect(gain);
+      extraNodes.push(filter, lfo, lfoGain);
+    }
+
+    gain.connect(ctx.destination);
+    src.start();
+    activeNoises[kind] = { src, gain, extraNodes };
+  }
+
+  function stopNoise(kind) {
+    const n = activeNoises[kind];
+    if (!n) return;
+    try { n.src.stop(); } catch {}
+    n.extraNodes.forEach(node => { try { if (node.stop) node.stop(); } catch {} });
+    delete activeNoises[kind];
+  }
+
+  document.querySelectorAll('.noise-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const kind = btn.dataset.noise;
+      const card = document.getElementById(`noise-${kind}`);
+      const slider = card.querySelector('.noise-slider');
+      if (activeNoises[kind]) {
+        stopNoise(kind);
+        btn.textContent = '▶ 播放';
+        card.classList.remove('playing');
+      } else {
+        startNoise(kind, parseFloat(slider.value));
+        btn.textContent = '⏸ 停止';
+        card.classList.add('playing');
+      }
+    });
+  });
+
+  document.querySelectorAll('.noise-slider').forEach(slider => {
+    slider.addEventListener('input', () => {
+      const kind = slider.dataset.noise;
+      if (activeNoises[kind]) {
+        activeNoises[kind].gain.gain.value = parseFloat(slider.value);
+      }
+    });
+  });
+
+  document.getElementById('stopAllNoiseBtn').addEventListener('click', () => {
+    ['rain', 'cafe', 'forest'].forEach(k => {
+      stopNoise(k);
+      const card = document.getElementById(`noise-${k}`);
+      card.classList.remove('playing');
+      card.querySelector('.noise-toggle').textContent = '▶ 播放';
+    });
+  });
+
+  // ================== MODALS: MORNING & EVENING ==================
+  window.openModal = id => document.getElementById(id).classList.add('open');
+  window.closeModal = id => document.getElementById(id).classList.remove('open');
+
+  function openMorningModal() {
+    const picker = document.getElementById('morningTaskPicker');
+    const activeTasks = state.tasks.filter(t => !t.completed);
+    if (activeTasks.length === 0) {
+      picker.innerHTML = `<div class="empty-state">目前沒有進行中的任務，請先新增任務！</div>`;
+    } else {
+      picker.innerHTML = activeTasks.map(t => {
+        const checked = state.top3.ids.includes(t.id);
+        return `
+          <label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:12px;cursor:pointer;">
+            <input type="checkbox" class="morning-cb" value="${t.id}" ${checked ? 'checked' : ''}>
+            <span style="flex:1;font-weight:600;font-size:14px;">${escapeHtml(t.title)}</span>
+            <span class="badge badge-${t.priority}">${t.priority === 'high' ? '高' : t.priority === 'medium' ? '中' : '低'}</span>
+          </label>
+        `;
+      }).join('');
+    }
+    state.daily.morningPrompted = true;
+    saveState();
+    openModal('morningModal');
+  }
+
+  document.getElementById('openMorningBtn').addEventListener('click', openMorningModal);
+  document.getElementById('editTop3Btn').addEventListener('click', openMorningModal);
+
+  document.getElementById('saveMorningTop3Btn').addEventListener('click', () => {
+    const selected = [...document.querySelectorAll('.morning-cb:checked')].map(cb => cb.value);
+    if (selected.length > 3) {
+      showToast('⚠️ 最多只能挑選 3 件最重要的事！');
+      return;
+    }
+    state.top3 = { date: todayStr(), ids: selected };
+    state.stats.morningPlansDone += 1;
+    checkAchievements();
+    saveState();
+    closeModal('morningModal');
+    renderTasks();
+    renderAchievements();
+    showToast('☀️ 已鎖定今日 Top 3 重點任務！');
+  });
+
+  function openEveningModal() {
+    const today = todayStr();
+    const todayTasks = state.tasks.filter(t => t.dueDate === today);
+    const doneToday = todayTasks.filter(t => t.completed).length;
+    const rate = todayTasks.length ? Math.round((doneToday / todayTasks.length) * 100) : 0;
+
+    document.getElementById('evRate').textContent = `${rate}%`;
+    document.getElementById('evExp').textContent = `+${state.daily.expEarned}`;
+    document.getElementById('evVocab').textContent = state.daily.vocabReviewed;
+
+    const unfinished = state.tasks.filter(t => !t.completed && t.dueDate && t.dueDate <= today);
+    const list = document.getElementById('evUnfinishedList');
+    if (unfinished.length === 0) {
+      list.innerHTML = `<div style="padding:12px;text-align:center;color:var(--green);font-weight:600;">🎉 今日任務已全數完成，太棒了！</div>`;
+    } else {
+      list.innerHTML = unfinished.map(t => `
+        <div style="padding:8px 12px;background:rgba(31,35,40,0.04);border-radius:10px;font-size:13.5px;display:flex;justify-content:space-between;">
+          <span>${escapeHtml(t.title)}</span>
+          <span style="color:var(--muted);font-size:12px;">${t.dueDate}</span>
+        </div>
+      `).join('');
+    }
+    openModal('eveningModal');
+  }
+
+  document.getElementById('openEveningBtn').addEventListener('click', openEveningModal);
+
+  document.getElementById('rolloverTomorrowBtn').addEventListener('click', () => {
+    const today = todayStr();
+    const tmr = tomorrowStr();
+    let count = 0;
+    state.tasks.forEach(t => {
+      if (!t.completed && t.dueDate && t.dueDate <= today) {
+        t.dueDate = tmr;
+        count++;
+      }
+    });
+    saveState();
+    renderTasks();
+    renderCalendar();
+    openEveningModal();
+    showToast(count > 0 ? `⏭️ 已將 ${count} 項未完成任務順延至明天 (${tmr})` : '沒有需要順延的任務');
+  });
+
+  document.getElementById('completeEveningBtn').addEventListener('click', () => {
+    state.stats.eveningReviewsDone += 1;
+    addRewards(15, 10, '🌙 完成晚間回顧儀式');
+    closeModal('eveningModal');
+  });
+
+  // ================== INIT ==================
+  renderGamifyHeader();
+  renderTasks();
+  renderCalendar();
+  renderFlashcard();
+  renderVocabList();
+  renderPomo();
+  renderAchievements();
+
+  // Auto-open Morning Planning on first visit of the day
+  if (!state.daily.morningPrompted) {
+    setTimeout(openMorningModal, 450);
+  }
+})();
+</script>
+</body>
+</html>
