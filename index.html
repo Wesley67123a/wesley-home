@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Wesley">
 <meta name="theme-color" content="#FAF4EC">
+<meta name="description" content="Wesley — 個人學習、待辦規劃、高階單字記憶、番茄鐘與白噪音工作台">
 <title>Wesley</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
@@ -22,12 +23,24 @@
   --accent-rgb:244,123,91;
   --accent-deep:#D85D3E;
   --accent-soft:rgba(244,123,91,.16);
+  --green:#3E9B6E;
+  --green-soft:rgba(62,155,110,.14);
+  --blue:#4A85D6;
+  --blue-soft:rgba(74,133,214,.14);
+  --amber:#D98A2B;
+  --amber-soft:rgba(217,138,43,.15);
+  --red:#D94E4E;
+  --red-soft:rgba(217,78,78,.14);
+  --purple:#7C5CD6;
+  --purple-soft:rgba(124,92,214,.14);
   --bg:#F7F3EE;
   --text:#1F2328;
   --muted:#6A707A;
+  --border:rgba(31,35,40,.09);
   --glass:rgba(255,255,255,.58);
-  --glass-strong:rgba(255,255,255,.76);
-  --glass-border:rgba(255,255,255,.72);
+  --glass-strong:rgba(255,255,255,.78);
+  --glass-modal:rgba(255,255,255,.88);
+  --glass-border:rgba(255,255,255,.74);
   --shadow:0 16px 40px rgba(31,35,40,.08);
   --radius:26px;
   --spring:cubic-bezier(.34,1.56,.64,1);
@@ -35,7 +48,7 @@
 }
 *,*::before,*::after,html,body,h1,h2,h3,h4,h5,h6,b,strong,button,input,select,textarea{
   box-sizing:border-box;
-  font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  font-family:'Google Sans',-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang TC','Noto Sans TC',sans-serif;
   font-weight:400 !important;
   -webkit-tap-highlight-color:transparent;
 }
@@ -45,12 +58,12 @@ html,body{
   min-height:100%;
   background:var(--bg);
   color:var(--text);
-  overflow-x:hidden;
+  overflow-x:clip;
   -webkit-text-size-adjust:100%;
   touch-action:manipulation;
 }
 button{border:none;background:none;color:inherit;cursor:pointer;padding:0;font:inherit;}
-input{font:inherit;color:inherit;}
+input,select,textarea{font:inherit;color:inherit;}
 .glass{
   background:var(--glass);
   backdrop-filter:blur(26px) saturate(165%);
@@ -133,13 +146,13 @@ input{font:inherit;color:inherit;}
   box-shadow:0 8px 20px rgba(var(--accent-rgb),.28);
 }
 .brand-title{font-size:20px;letter-spacing:-.02em;}
-.nav-list{display:flex;flex-direction:column;gap:6px;}
+.nav-list{display:flex;flex-direction:column;gap:5px;overflow-y:auto;}
 .nav-item{
   display:flex;align-items:center;gap:12px;
-  padding:12px 14px;border-radius:16px;
+  padding:11px 14px;border-radius:16px;
   color:var(--muted);
   transition:background .25s,color .25s,transform .35s var(--spring);
-  text-align:left;width:100%;
+  text-align:left;width:100%;font-size:14.5px;
 }
 .nav-item:hover{background:rgba(255,255,255,.55);color:var(--text);transform:translateX(2px);}
 .nav-item.active{
@@ -148,7 +161,8 @@ input{font:inherit;color:inherit;}
   box-shadow:0 6px 18px rgba(31,35,40,.06),inset 0 0 0 1px rgba(var(--accent-rgb),.28);
 }
 .nav-item.active svg{color:var(--accent);}
-.profile-card{margin-top:auto;
+.profile-card{
+  margin-top:auto;
   display:flex;align-items:center;gap:11px;
   padding:12px;border-radius:20px;
   background:rgba(255,255,255,.52);
@@ -166,7 +180,7 @@ input{font:inherit;color:inherit;}
 .main{
   flex:1;
   min-width:0;
-  padding:18px 24px 36px;
+  padding:18px 24px 44px;
   display:flex;
   flex-direction:column;
   gap:20px;
@@ -190,11 +204,12 @@ input{font:inherit;color:inherit;}
 .crumb-sep{color:var(--muted);opacity:.6;}
 .top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .pill-btn{
-  display:flex;align-items:center;gap:7px;
+  display:inline-flex;align-items:center;gap:7px;
   height:40px;padding:0 14px;border-radius:999px;
   font-size:13px;
   transition:transform .3s var(--spring),background .25s;
 }
+.pill-btn:hover{background:rgba(255,255,255,.76);}
 .pill-btn:active{transform:scale(.95);}
 .accent-pill{
   display:flex;align-items:center;gap:7px;
@@ -236,11 +251,49 @@ input{font:inherit;color:inherit;}
 }
 
 .greeting-row{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;
   padding:2px 4px;
 }
 .greeting-title{font-size:clamp(26px,3.2vw,34px);letter-spacing:-.025em;margin:0;line-height:1.18;}
 .greeting-sub{font-size:14px;color:var(--muted);margin:6px 0 0;}
+.greeting-actions{
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+}
+.gamify-pill{
+  display:inline-flex;align-items:center;gap:9px;
+  height:38px;padding:0 13px;border-radius:999px;
+  font-size:12.5px;
+  transition:transform .3s var(--spring);
+}
+.gamify-pill:hover{transform:translateY(-1px);}
+.lvl-badge{
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+  color:#fff;padding:2px 9px;border-radius:999px;font-size:11.5px;
+}
+.exp-mini-bar{
+  width:60px;height:6px;background:rgba(31,35,40,.1);
+  border-radius:999px;overflow:hidden;
+}
+.exp-mini-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),rgba(var(--accent-rgb),.65));
+  border-radius:999px;transition:width .4s var(--smooth);
+}
+.ritual-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  height:38px;padding:0 14px;border-radius:999px;
+  font-size:13px;position:relative;
+  transition:transform .3s var(--spring),background .25s;
+}
+.ritual-btn:hover{transform:translateY(-1px);}
+.ritual-btn:active{transform:scale(.96);}
+.ritual-btn.morning{background:rgba(217,138,43,.16);color:#9A5D0A;border:1px solid rgba(217,138,43,.28);}
+.ritual-btn.morning:hover{background:rgba(217,138,43,.24);}
+.ritual-btn.evening{background:rgba(124,92,214,.14);color:#5B3CC4;border:1px solid rgba(124,92,214,.25);}
+.ritual-btn.evening:hover{background:rgba(124,92,214,.22);}
+.ritual-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
 
 .bento-top{
   display:grid;
@@ -305,6 +358,7 @@ input{font:inherit;color:inherit;}
   position:relative;
   transition:transform .38s var(--spring),box-shadow .3s;
   cursor:pointer;
+  text-align:left;
 }
 .mini-card:hover{transform:translateY(-3px);}
 .mini-card:active{transform:scale(.97);}
@@ -319,15 +373,417 @@ input{font:inherit;color:inherit;}
   background:rgba(255,255,255,.72);
   border:1px solid rgba(255,255,255,.85);
 }
+.mini-icon svg{width:30px;height:30px;}
 .mini-arrow{
   width:28px;height:28px;border-radius:50%;
   display:grid;place-items:center;
   background:rgba(255,255,255,.55);
-  color:var(--text);
+  color:var(--text);font-size:12px;
 }
 .mini-label{font-size:12px;color:var(--muted);margin-top:12px;}
 .mini-value{font-size:17px;margin-top:3px;display:flex;align-items:center;gap:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mini-value svg{width:18px;height:18px;flex-shrink:0;}
 
+/* Draw Panel */
+.draw-panel{
+  border-radius:30px;
+  padding:24px;
+  display:none;
+  flex-direction:column;
+  gap:20px;
+  transform-origin:top center;
+  animation:springIn .48s var(--spring);
+}
+.draw-panel.open{display:flex;}
+@keyframes springIn{0%{opacity:0;transform:scale(.94) translateY(10px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+.draw-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.draw-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.subject-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:12px;
+}
+.subj-card{
+  border-radius:20px;padding:14px 10px;
+  background:rgba(255,255,255,.56);
+  border:1px solid rgba(255,255,255,.8);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  transition:transform .38s var(--spring),box-shadow .25s,opacity .25s,background .25s;
+}
+.subj-card.picking{transform:scale(1.07);box-shadow:0 0 0 2px var(--accent),0 12px 24px rgba(var(--accent-rgb),.24);background:rgba(255,255,255,.88);}
+.subj-card.chosen{transform:scale(1.08);box-shadow:0 0 0 2px var(--accent),0 14px 28px rgba(var(--accent-rgb),.32);background:#fff;}
+.subj-card.used{opacity:.42;}
+.subj-icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;}
+.subj-icon svg{width:38px;height:38px;}
+.draw-result-box .subj-icon svg{width:52px;height:52px;}
+.subj-name{font-size:14px;}
+.subj-count{font-size:11px;color:var(--muted);}
+.draw-stage{
+  display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:stretch;
+}
+.draw-result-box{
+  border-radius:24px;padding:22px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.85);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;
+}
+.draw-btn{
+  padding:12px 26px;border-radius:999px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+  color:#fff;font-size:15px;
+  box-shadow:0 10px 24px rgba(var(--accent-rgb),.32);
+  transition:transform .35s var(--spring);
+}
+.draw-btn:hover{transform:translateY(-2px) scale(1.02);}
+.draw-btn:active{transform:scale(.95);}
+.history-box{
+  border-radius:24px;padding:18px;
+  background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.8);
+  display:flex;flex-direction:column;gap:10px;max-height:220px;overflow-y:auto;
+}
+.history-item{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.62);font-size:13px;
+}
+.history-item svg{width:18px;height:18px;}
+
+/* Workspace Section (Merged Todo, Calendar, Vocab, Focus, Achievements) */
+.workspace-section{
+  border-radius:30px;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.ws-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.ws-tabs{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  padding:4px;
+  border-radius:20px;
+  background:rgba(255,255,255,.46);
+  border:1px solid rgba(255,255,255,.78);
+}
+.ws-tab{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 15px;
+  border-radius:15px;
+  font-size:13.5px;
+  color:var(--muted);
+  white-space:nowrap;
+  transition:background .25s,color .25s,transform .3s var(--spring),box-shadow .25s;
+}
+.ws-tab:hover{color:var(--text);background:rgba(255,255,255,.55);}
+.ws-tab.active{
+  background:var(--glass-strong);
+  color:var(--text);
+  box-shadow:0 6px 18px rgba(31,35,40,.08),inset 0 0 0 1px rgba(var(--accent-rgb),.32);
+}
+.ws-tab-badge{
+  padding:1px 7px;
+  border-radius:999px;
+  font-size:11px;
+  background:var(--accent-soft);
+  color:var(--accent-deep);
+}
+.tab-panel{display:none;animation:fadeIn .26s var(--smooth);}
+.tab-panel.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+.ws-card{
+  background:rgba(255,255,255,.56);
+  border:1px solid rgba(255,255,255,.82);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 8px 24px rgba(31,35,40,.04);
+}
+.ws-card-head{
+  margin:0 0 14px;
+  font-size:16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.ws-grid-2{
+  display:grid;
+  grid-template-columns:1.45fr 1fr;
+  gap:18px;
+  align-items:start;
+}
+.ws-grid-equal{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  align-items:start;
+}
+
+/* Top 3 Priorities */
+.top3-card{
+  background:linear-gradient(135deg,rgba(var(--accent-rgb),.12),rgba(255,255,255,.72));
+  border:1px solid rgba(var(--accent-rgb),.26);
+  margin-bottom:16px;
+}
+.top3-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.top3-slot{
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(255,255,255,.88);
+  border-radius:16px;
+  padding:12px 14px;
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  transition:transform .3s var(--spring),opacity .25s,background .25s;
+}
+.top3-slot:hover{transform:translateY(-2px);}
+.top3-slot.done{opacity:.65;background:rgba(62,155,110,.09);}
+.top3-rank{
+  width:24px;height:24px;border-radius:8px;
+  background:var(--accent-soft);color:var(--accent-deep);
+  font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* Workspace Buttons & Inputs */
+.ws-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 15px;border-radius:14px;font-size:13.5px;
+  transition:transform .28s var(--spring),background .2s,opacity .2s;
+  white-space:nowrap;
+}
+.ws-btn:active{transform:scale(.96);}
+.ws-btn-primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
+  color:#fff;
+  box-shadow:0 6px 16px rgba(var(--accent-rgb),.26);
+}
+.ws-btn-primary:hover{transform:translateY(-1px);}
+.ws-btn-secondary{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(31,35,40,.08);
+  color:var(--text);
+}
+.ws-btn-secondary:hover{background:rgba(255,255,255,.94);}
+.ws-btn-danger{background:var(--red-soft);color:var(--red);}
+.ws-btn-danger:hover{background:rgba(217,78,78,.22);}
+.ws-btn-success{background:var(--green);color:#fff;box-shadow:0 6px 16px rgba(62,155,110,.24);}
+.ws-btn-success:hover{background:#34865F;transform:translateY(-1px);}
+.ws-btn-sm{padding:6px 11px;font-size:12.5px;border-radius:11px;}
+
+.ws-input,.ws-select{
+  width:100%;
+  padding:9px 12px;
+  border-radius:13px;
+  border:1px solid rgba(31,35,40,.1);
+  background:rgba(255,255,255,.82);
+  font-size:13.5px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+}
+.ws-input:focus,.ws-select:focus{
+  border-color:var(--accent);
+  background:#fff;
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+
+/* Task Form & List */
+.task-form{
+  display:grid;
+  grid-template-columns:1fr 112px 120px 142px auto;
+  gap:8px;
+  margin-bottom:14px;
+}
+.filter-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+.pill-group{display:flex;gap:6px;flex-wrap:wrap;}
+.filter-pill{
+  padding:6px 13px;border-radius:999px;font-size:12.5px;
+  color:var(--muted);background:rgba(255,255,255,.65);border:1px solid rgba(31,35,40,.07);
+  transition:background .2s,color .2s;
+}
+.filter-pill.active{background:var(--accent);color:#fff;border-color:transparent;}
+
+.task-list{display:flex;flex-direction:column;gap:10px;}
+.task-item{
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:18px;
+  padding:14px 16px;
+  transition:border-color .2s,transform .25s var(--smooth),background .2s;
+}
+.task-item:hover{border-color:rgba(var(--accent-rgb),.38);background:rgba(255,255,255,.9);}
+.task-item.completed{opacity:.66;background:rgba(255,255,255,.5);}
+.task-row{display:flex;align-items:flex-start;gap:12px;}
+.task-check{
+  width:22px;height:22px;border-radius:7px;
+  border:1.8px solid rgba(var(--accent-rgb),.65);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:2px;background:#fff;
+  transition:background .2s,border-color .2s,transform .25s var(--spring);
+}
+.task-check:active{transform:scale(.88);}
+.task-check.checked{background:var(--green);border-color:var(--green);color:#fff;}
+.task-main{flex:1;min-width:0;}
+.task-title{font-size:14.5px;word-break:break-word;line-height:1.4;}
+.task-item.completed .task-title{text-decoration:line-through;color:var(--muted);}
+.task-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;font-size:11.5px;}
+.badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 9px;border-radius:999px;font-size:11.5px;
+  white-space:nowrap;flex-shrink:0;
+}
+.badge-high{background:var(--red-soft);color:var(--red);}
+.badge-medium{background:var(--amber-soft);color:#9A5D0A;}
+.badge-low{background:var(--green-soft);color:var(--green);}
+.badge-cat{background:var(--blue-soft);color:var(--blue);}
+.badge-date{background:rgba(31,35,40,.06);color:var(--muted);}
+.badge-overdue{background:var(--red-soft);color:var(--red);}
+.badge-top3{background:var(--accent-soft);color:var(--accent-deep);}
+
+.task-actions{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.ws-icon-btn{
+  width:30px;height:30px;border-radius:10px;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:var(--muted);font-size:13.5px;
+  transition:background .2s,color .2s;
+}
+.ws-icon-btn:hover{background:rgba(31,35,40,.08);color:var(--text);}
+.ws-icon-btn.del:hover{background:var(--red-soft);color:var(--red);}
+
+.subtasks-box{
+  margin-top:10px;padding-top:10px;
+  border-top:1px dashed rgba(31,35,40,.1);
+  margin-left:34px;
+}
+.subtask-progress{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-bottom:8px;}
+.progress-track{flex:1;height:6px;background:rgba(31,35,40,.08);border-radius:999px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--green);border-radius:999px;transition:width .35s var(--smooth);}
+.subtask-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;}
+.subtask-item input[type=checkbox]{accent-color:var(--green);width:15px;height:15px;cursor:pointer;}
+.subtask-item.done span{text-decoration:line-through;color:var(--muted);}
+.subtask-add-row{display:flex;gap:6px;margin-top:6px;}
+
+/* Calendar */
+.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px;flex-wrap:wrap;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
+.cal-dow{text-align:center;font-size:12px;color:var(--muted);padding:6px 0;}
+.cal-cell{
+  min-height:70px;
+  background:rgba(255,255,255,.74);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:14px;
+  padding:8px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  cursor:pointer;
+  transition:border-color .2s,transform .25s var(--spring),background .2s;
+}
+.cal-cell:hover{border-color:var(--accent);transform:translateY(-1px);}
+.cal-cell.other-month{opacity:.36;}
+.cal-cell.today{border-color:var(--accent);background:var(--accent-soft);}
+.cal-cell.selected{background:var(--text);color:#fff;border-color:var(--text);}
+.cal-day-num{font-size:13px;}
+.cal-dots{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.cal-count{font-size:11px;padding:1px 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent-deep);}
+.cal-cell.selected .cal-count{background:var(--accent);color:#fff;}
+
+/* Vocabulary Flashcard */
+.flashcard-stage{
+  background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(250,245,238,.82));
+  border:1px solid rgba(255,255,255,.95);
+  border-radius:22px;
+  padding:28px 22px;
+  text-align:center;
+  min-height:278px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  box-shadow:0 10px 26px rgba(31,35,40,.05);
+  position:relative;
+}
+.fc-word{font-size:32px;letter-spacing:-.02em;margin-bottom:6px;}
+.fc-phonetic{font-size:14.5px;color:var(--muted);margin-bottom:14px;}
+.fc-reveal{
+  width:100%;max-width:500px;margin-top:10px;padding:14px 16px;
+  border-radius:15px;background:rgba(31,35,40,.04);text-align:left;
+}
+.fc-meaning{font-size:16.5px;margin-bottom:6px;color:var(--text);}
+.fc-example{font-size:13.5px;color:var(--muted);font-style:italic;}
+.fc-controls{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+.vocab-list{display:flex;flex-direction:column;gap:8px;max-height:430px;overflow-y:auto;padding-right:4px;}
+.vocab-row{
+  background:rgba(255,255,255,.78);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:15px;
+  padding:12px 14px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+}
+
+/* Pomodoro & White Noise */
+.pomo-wrap{display:flex;flex-direction:column;align-items:center;text-align:center;}
+.pomo-ring-box{position:relative;width:214px;height:214px;margin:8px 0 16px;}
+.pomo-ring-box svg{transform:rotate(-90deg);width:214px;height:214px;}
+.pomo-time-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.pomo-digits{font-size:44px;font-variant-numeric:tabular-nums;letter-spacing:-.03em;}
+.pomo-mode-label{font-size:13px;color:var(--muted);}
+.noise-card{display:flex;flex-direction:column;gap:11px;}
+.noise-item{
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:17px;
+  padding:13px 15px;
+  display:flex;flex-direction:column;gap:9px;
+  transition:border-color .2s,background .2s;
+}
+.noise-item.playing{border-color:var(--accent);background:rgba(var(--accent-rgb),.08);}
+.noise-top{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.noise-slider{width:100%;accent-color:var(--accent);cursor:pointer;}
+
+/* Achievements */
+.stat-boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0;}
+.stat-boxes-4{grid-template-columns:repeat(4,1fr);}
+.stat-box{
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:16px;padding:12px;text-align:center;
+}
+.stat-val{font-size:22px;color:var(--accent-deep);}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:2px;}
+.ach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.ach-card{
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:18px;padding:14px;text-align:center;
+  transition:transform .3s var(--spring),opacity .25s;
+}
+.ach-card.locked{opacity:.5;filter:grayscale(.8);}
+.ach-card.unlocked{
+  border-color:rgba(var(--accent-rgb),.42);
+  background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(var(--accent-rgb),.09));
+}
+.ach-icon{font-size:28px;margin-bottom:6px;}
+.ach-name{font-size:14px;}
+.ach-desc{font-size:12px;color:var(--muted);margin-top:3px;}
+
+/* Bento Bottom Stats */
 .bento-bottom{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -399,99 +855,53 @@ input{font:inherit;color:inherit;}
 .prog-track{height:8px;border-radius:999px;background:rgba(255,255,255,.52);overflow:hidden;}
 .prog-fill{height:100%;border-radius:999px;transition:width .55s var(--spring);}
 
-.draw-panel{
-  border-radius:30px;
-  padding:24px;
-  display:none;
-  flex-direction:column;
-  gap:20px;
-  transform-origin:top center;
-  animation:springIn .48s var(--spring);
-}
-.draw-panel.open{display:flex;}
-@keyframes springIn{0%{opacity:0;transform:scale(.94) translateY(10px)}100%{opacity:1;transform:scale(1) translateY(0)}}
-.draw-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
-.draw-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.subject-grid{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:12px;
-}
-.subj-card{
-  border-radius:20px;padding:14px 10px;
-  background:rgba(255,255,255,.56);
-  border:1px solid rgba(255,255,255,.8);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  transition:transform .38s var(--spring),box-shadow .25s,opacity .25s,background .25s;
-}
-.subj-card.picking{transform:scale(1.07);box-shadow:0 0 0 2px var(--accent),0 12px 24px rgba(var(--accent-rgb),.24);background:rgba(255,255,255,.88);}
-.subj-card.chosen{transform:scale(1.08);box-shadow:0 0 0 2px var(--accent),0 14px 28px rgba(var(--accent-rgb),.32);background:#fff;}
-.subj-card.used{opacity:.42;}
-.subj-icon{width:64px;height:64px;border-radius:18px;display:grid;place-items:center;}
-.subj-name{font-size:14px;}
-.subj-count{font-size:11px;color:var(--muted);}
-.draw-stage{
-  display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:stretch;
-}
-.draw-result-box{
-  border-radius:24px;padding:22px;
-  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.85);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;
-}
-.draw-btn{
-  padding:12px 26px;border-radius:999px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-deep));
-  color:#fff;font-size:15px;
-  box-shadow:0 10px 24px rgba(var(--accent-rgb),.32);
-  transition:transform .35s var(--spring);
-}
-.draw-btn:hover{transform:translateY(-2px) scale(1.02);}
-.draw-btn:active{transform:scale(.95);}
-.history-box{
-  border-radius:24px;padding:18px;
-  background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.8);
-  display:flex;flex-direction:column;gap:10px;max-height:220px;overflow-y:auto;
-}
-.history-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 12px;border-radius:14px;background:rgba(255,255,255,.62);font-size:13px;
-}
-
+/* Modals */
 .modal-backdrop{
-  position:fixed;inset:0;z-index:50;
-  background:rgba(25,28,34,.22);
+  position:fixed;inset:0;z-index:60;
+  background:rgba(25,28,34,.24);
   backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);
-  display:none;place-items:center;padding:20px;
+  display:none;place-items:center;padding:18px;
 }
 .modal-backdrop.open{display:grid;}
 .modal-card{
   width:100%;max-width:440px;border-radius:28px;padding:22px;
-  animation:springIn .4s var(--spring);
+  background:var(--glass-modal);
+  animation:springIn .38s var(--spring);
+}
+.modal-card.ws-modal{
+  max-width:560px;max-height:88vh;overflow-y:auto;
 }
 .modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
 .search-input{
   width:100%;padding:12px 16px;border-radius:16px;
-  background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.9);
+  background:rgba(255,255,255,.82);border:1px solid rgba(31,35,40,.08);
   outline:none;font-size:15px;margin-bottom:12px;
 }
+.search-input:focus{border-color:var(--accent);}
 .cmd-list{display:flex;flex-direction:column;gap:6px;}
 .cmd-item{
   display:flex;align-items:center;justify-content:space-between;
-  padding:11px 14px;border-radius:14px;background:rgba(255,255,255,.46);
+  padding:11px 14px;border-radius:14px;background:rgba(255,255,255,.58);
   font-size:14px;text-align:left;width:100%;
+  transition:background .2s;
 }
-.cmd-item:hover{background:rgba(255,255,255,.82);}
-.todo-row{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
-  background:rgba(255,255,255,.58);margin-bottom:8px;cursor:pointer;
+.cmd-item:hover{background:rgba(255,255,255,.92);}
+
+.empty-state{text-align:center;padding:28px 14px;color:var(--muted);font-size:13.5px;}
+
+/* Toast */
+.toast-container{
+  position:fixed;bottom:20px;right:20px;z-index:200;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;
 }
-.todo-check{
-  width:20px;height:20px;border-radius:7px;border:1.5px solid var(--accent);
-  display:grid;place-items:center;flex-shrink:0;
+.toast{
+  background:rgba(31,35,40,.92);color:#fff;
+  backdrop-filter:blur(12px);
+  padding:10px 16px;border-radius:14px;font-size:13px;
+  box-shadow:0 12px 28px rgba(0,0,0,.2);
+  animation:fadeIn .25s ease;
 }
-.todo-row.done .todo-check{background:var(--accent);color:#fff;}
-.todo-row.done span{text-decoration:line-through;color:var(--muted);}
 
 .drawer-overlay{
   position:fixed;inset:0;z-index:39;background:rgba(20,24,30,.24);
@@ -501,15 +911,15 @@ input{font:inherit;color:inherit;}
 .drawer-overlay.open{display:block;}
 .mobile-nav{
   display:none;
-  position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));
-  z-index:35;border-radius:26px;padding:8px 10px;
+  position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));
+  z-index:35;border-radius:24px;padding:7px 8px;
   justify-content:space-around;align-items:center;
 }
 .mnav-btn{
   display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:6px 12px;border-radius:16px;font-size:11px;color:var(--muted);
+  padding:6px 10px;border-radius:14px;font-size:11px;color:var(--muted);
 }
-.mnav-btn.active{color:var(--accent);background:rgba(255,255,255,.65);}
+.mnav-btn.active{color:var(--accent);background:rgba(255,255,255,.68);}
 
 @media (max-width:1024px){
   .menu-btn{display:grid;}
@@ -521,21 +931,37 @@ input{font:inherit;color:inherit;}
   .sidebar.open{transform:translateX(0);}
   .bento-top{grid-template-columns:1fr;}
   .mini-grid{grid-template-columns:repeat(4,1fr);}
-  .bento-bottom{grid-template-columns:1fr;}
+  .bento-bottom,.ws-grid-2,.ws-grid-equal{grid-template-columns:1fr;}
   .subject-grid{grid-template-columns:repeat(3,1fr);}
   .draw-stage{grid-template-columns:1fr;}
+  .top3-grid{grid-template-columns:1fr;}
+  .task-form{grid-template-columns:1fr 1fr;}
+  .task-form .input-title{grid-column:1 / -1;}
+  .task-form .btn-add{grid-column:1 / -1;}
 }
 @media (max-width:640px){
   .main{padding:14px 14px calc(92px + env(safe-area-inset-bottom));gap:16px;}
+  .top-right{gap:7px;}
+  .pill-btn{height:36px;padding:0 11px;font-size:12.5px;}
+  .accent-pill{height:36px;padding:0 9px;gap:5px;}
+  .dot{width:15px;height:15px;}
+  .search-pill{height:36px;min-width:auto;padding:0 10px;gap:6px;}
   .search-pill span.search-label{display:none;}
-  .search-pill{min-width:auto;padding:0 12px;}
+  .top-avatar{width:36px;height:36px;font-size:14px;}
   .hero-card{flex-direction:column;align-items:flex-start;padding:22px;}
   .hero-right{width:154px;height:154px;align-self:center;}
   .mini-grid{grid-template-columns:repeat(2,1fr);}
   .subject-grid{grid-template-columns:repeat(2,1fr);}
+  .workspace-section{padding:16px;}
+  .ws-tabs{padding:4px;gap:4px;border-radius:16px;}
+  .ws-tab{padding:7px 11px;font-size:12.5px;border-radius:12px;}
+  .ws-card{padding:16px;}
+  .cal-cell{min-height:54px;padding:6px;}
+  .stat-boxes,.stat-boxes-4,.ach-grid{grid-template-columns:repeat(2,1fr);}
   .mobile-nav{display:flex;}
+  .toast-container{bottom:82px;right:14px;left:14px;align-items:center;}
 }
-.todo-add{display:flex;gap:8px;margin-bottom:12px;}.todo-add input{flex:1;min-width:0;padding:10px 14px;border-radius:14px;border:1px solid rgba(15,23,42,.12);background:rgba(255,255,255,.72);font-family:inherit;font-weight:400;font-size:14px;color:var(--text);outline:none;}.todo-add input:focus{border-color:var(--accent);background:rgba(255,255,255,.92);}.todo-del{width:28px;height:28px;border-radius:10px;border:none;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:background .2s,color .2s;}.todo-del:hover{background:rgba(239,68,68,.12);color:#ef4444;}.todo-foot{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding-top:12px;border-top:1px solid rgba(15,23,42,.08);}</style>
+</style>
 </head>
 <body>
 <div class="wallpaper" aria-hidden="true">
@@ -556,29 +982,33 @@ input{font:inherit;color:inherit;}
       </div>
       <nav class="nav-list" id="sideNav">
         <button class="nav-item active" data-nav="home">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
           <span data-i18n="navHome">首頁</span>
         </button>
-        <button class="nav-item" data-nav="draw">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor"/></svg>
-          <span data-i18n="navDraw">溫習抽籤</span>
-        </button>
-        <button class="nav-item" data-nav="focus">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          <span data-i18n="navFocus">專注計時</span>
-        </button>
         <button class="nav-item" data-nav="tasks">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
           <span data-i18n="navTasks">待辦清單</span>
         </button>
-        <button class="nav-item" data-nav="stats">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20v-4"/></svg>
-          <span data-i18n="navStats">學習數據</span>
+        <button class="nav-item" data-nav="calendar">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+          <span data-i18n="navCalendar">日曆規劃</span>
         </button>
-        <a class="nav-item" href="./todo.html" style="text-decoration:none;">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M8 2v4"/><path d="M16 2v4"/><path d="M3 10h18"/><path d="M9 15l2 2 4-4"/></svg>
-          <span>生產力工作台</span>
-        </a>
+        <button class="nav-item" data-nav="draw">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.2" fill="currentColor"/></svg>
+          <span data-i18n="navDraw">溫習抽籤</span>
+        </button>
+        <button class="nav-item" data-nav="vocab">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          <span data-i18n="navVocab">高階單字庫</span>
+        </button>
+        <button class="nav-item" data-nav="focus">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span data-i18n="navFocus">番茄鐘與白噪音</span>
+        </button>
+        <button class="nav-item" data-nav="stats">
+          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20v-4"/></svg>
+          <span data-i18n="navStats">學習與成就</span>
+        </button>
       </nav>
     </div>
     <div class="profile-card">
@@ -631,6 +1061,23 @@ input{font:inherit;color:inherit;}
         <h1 class="greeting-title" id="greetingText">早安，Wesley</h1>
         <p class="greeting-sub" id="greetingSub">載入時間中...</p>
       </div>
+      <div class="greeting-actions">
+        <button class="gamify-pill glass" id="gamifyPill" title="查看成就與成長數據">
+          <span class="lvl-badge" id="hdrLevel">Lv.1</span>
+          <div class="exp-mini-bar"><div class="exp-mini-fill" id="hdrExpFill" style="width:0%"></div></div>
+          <span id="hdrExpText">0/100 EXP</span>
+          <span>🪙 <span id="hdrCoins">0</span></span>
+        </button>
+        <button class="ritual-btn morning" id="openMorningBtn">
+          <span>☀️</span>
+          <span data-i18n="btnMorning">晨間規劃</span>
+          <span class="ritual-dot" id="morningDot" style="display:none"></span>
+        </button>
+        <button class="ritual-btn evening" id="openEveningBtn">
+          <span>🌙</span>
+          <span data-i18n="btnEvening">晚間回顧</span>
+        </button>
+      </div>
     </section>
 
     <section class="bento-top">
@@ -669,7 +1116,7 @@ input{font:inherit;color:inherit;}
         <button class="mini-card glass mini-peach" id="cardDrawTrigger">
           <div class="mini-top">
             <div class="mini-icon" style="color:#E06B47">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/></svg>
             </div>
             <span class="mini-arrow">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
@@ -684,7 +1131,7 @@ input{font:inherit;color:inherit;}
         <button class="mini-card glass" id="cardTasksTrigger">
           <div class="mini-top">
             <div class="mini-icon" style="color:#5F9E7E">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             </div>
             <span class="mini-arrow">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
@@ -692,21 +1139,21 @@ input{font:inherit;color:inherit;}
           </div>
           <div>
             <div class="mini-label" data-i18n="cardTasksLabel">待辦事項</div>
-            <div class="mini-value" id="cardTasksValue">2 / 4 完成</div>
+            <div class="mini-value" id="cardTasksValue">0 / 2 完成</div>
           </div>
         </button>
 
         <button class="mini-card glass" id="cardTimerTrigger">
           <div class="mini-top">
             <div class="mini-icon" style="color:#E59A38">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/></svg>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5"/><path d="M9 2h6"/></svg>
             </div>
             <span class="mini-arrow" id="timerBadge">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             </span>
           </div>
           <div>
-            <div class="mini-label" data-i18n="cardTimerLabel">專注計時</div>
+            <div class="mini-label" id="cardTimerLabel" data-i18n="cardTimerLabel">專注計時</div>
             <div class="mini-value" id="cardTimerValue">25:00</div>
           </div>
         </button>
@@ -714,7 +1161,7 @@ input{font:inherit;color:inherit;}
         <button class="mini-card glass" id="cardWaterTrigger">
           <div class="mini-top">
             <div class="mini-icon" style="color:#4A90D9">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5C12 2.5 6 9.5 6 14a6 6 0 0 0 12 0c0-4.5-6-11.5-6-11.5Z"/></svg>
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5C12 2.5 6 9.5 6 14a6 6 0 0 0 12 0c0-4.5-6-11.5-6-11.5Z"/></svg>
             </div>
             <span class="mini-arrow">+1</span>
           </div>
@@ -765,6 +1212,294 @@ input{font:inherit;color:inherit;}
       </div>
     </section>
 
+    <!-- MERGED PRODUCTIVITY & TODO WORKSPACE -->
+    <section class="workspace-section glass" id="workspaceSection">
+      <div class="ws-topbar">
+        <div>
+          <h2 class="card-title" data-i18n="wsTitle">Wesley Flow · 任務與生產力中心</h2>
+          <p class="card-sub" data-i18n="wsSub">Top 3 重點推進 · 子任務拆解 · 日曆 · 高階單字 · 番茄鐘與白噪音</p>
+        </div>
+        <div class="ws-tabs" id="workspaceTabs">
+          <button class="ws-tab active" data-tab="tasks">✅ <span data-i18n="tabTasks">待辦清單</span> <span class="ws-tab-badge" id="tabTasksBadge">0</span></button>
+          <button class="ws-tab" data-tab="calendar">📅 <span data-i18n="tabCalendar">日曆規劃</span></button>
+          <button class="ws-tab" data-tab="vocab">📚 <span data-i18n="tabVocab">高階單字庫</span></button>
+          <button class="ws-tab" data-tab="focus">🍅 <span data-i18n="tabFocus">番茄鐘與白噪音</span></button>
+          <button class="ws-tab" data-tab="achievements">🏆 <span data-i18n="tabAch">成就徽章</span></button>
+        </div>
+      </div>
+
+      <!-- TAB 1: TASKS -->
+      <div class="tab-panel active" id="panel-tasks">
+        <div class="ws-card top3-card">
+          <div class="ws-card-head">
+            <span data-i18n="top3Title">⭐ 今日最重要的 3 件事（Top 3 Priorities）</span>
+            <button class="ws-btn ws-btn-secondary ws-btn-sm" id="editTop3Btn" data-i18n="top3Adjust">挑選 / 調整</button>
+          </div>
+          <div class="top3-grid" id="top3Container"></div>
+        </div>
+
+        <div class="ws-card">
+          <div class="ws-card-head">
+            <span data-i18n="taskMgmtTitle">📝 任務管理</span>
+            <span style="font-size:13px;color:var(--muted);" id="taskSummaryText">0 項任務</span>
+          </div>
+
+          <form class="task-form" id="addTaskForm">
+            <input type="text" class="ws-input input-title" id="taskTitleInput" data-i18n-ph="phTaskTitle" placeholder="輸入新任務名稱..." required>
+            <select class="ws-select" id="taskPriorityInput" aria-label="優先級">
+              <option value="high">🔴 高優先</option>
+              <option value="medium" selected>🟡 中優先</option>
+              <option value="low">🟢 低優先</option>
+            </select>
+            <input type="text" class="ws-input" id="taskCategoryInput" list="categoryOptions" data-i18n-ph="phTaskCategory" placeholder="分類標籤" value="學習">
+            <datalist id="categoryOptions">
+              <option value="Chem"></option>
+              <option value="Bio"></option>
+              <option value="Eng"></option>
+              <option value="Math"></option>
+              <option value="ICT"></option>
+              <option value="Chi"></option>
+              <option value="學習"></option>
+              <option value="工作"></option>
+              <option value="專案"></option>
+              <option value="閱讀"></option>
+              <option value="生活"></option>
+            </datalist>
+            <input type="date" class="ws-input" id="taskDueInput" aria-label="截止日期">
+            <button type="submit" class="ws-btn ws-btn-primary btn-add" data-i18n="btnAddTask">＋ 新增任務</button>
+          </form>
+
+          <div class="filter-bar">
+            <div class="pill-group" id="taskFilterGroup">
+              <button class="filter-pill active" data-filter="all" data-i18n="filterAll">全部</button>
+              <button class="filter-pill" data-filter="active" data-i18n="filterActive">進行中</button>
+              <button class="filter-pill" data-filter="completed" data-i18n="filterDone">已完成</button>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <select class="ws-select" id="taskCategoryFilter" style="width:auto;padding:6px 12px;font-size:12.5px;">
+                <option value="all">所有分類</option>
+              </select>
+              <button class="ws-btn ws-btn-danger ws-btn-sm" id="clearCompletedBtn" data-i18n="btnClearDone">清除已完成</button>
+            </div>
+          </div>
+
+          <div class="task-list" id="taskList"></div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CALENDAR -->
+      <div class="tab-panel" id="panel-calendar">
+        <div class="ws-grid-2">
+          <div class="ws-card">
+            <div class="cal-header">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <button class="ws-btn ws-btn-secondary ws-btn-sm" id="calPrevBtn">◀</button>
+                <span id="calMonthLabel" style="font-size:16px;min-width:118px;text-align:center;"></span>
+                <button class="ws-btn ws-btn-secondary ws-btn-sm" id="calNextBtn">▶</button>
+              </div>
+              <button class="ws-btn ws-btn-secondary ws-btn-sm" id="calTodayBtn" data-i18n="btnCalToday">回到今天</button>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+
+          <div class="ws-card">
+            <div class="ws-card-head">
+              <span id="calSelectedDateTitle">選擇日期的任務</span>
+            </div>
+            <form id="calAddTaskForm" style="display:flex;gap:8px;margin-bottom:14px;">
+              <input type="text" class="ws-input" id="calTaskTitle" data-i18n-ph="phCalTask" placeholder="直接在此日期新增任務..." required>
+              <select class="ws-select" id="calTaskPriority" style="width:86px;flex-shrink:0;">
+                <option value="high">高</option>
+                <option value="medium" selected>中</option>
+                <option value="low">低</option>
+              </select>
+              <button type="submit" class="ws-btn ws-btn-primary ws-btn-sm" data-i18n="btnAddShort">新增</button>
+            </form>
+            <div class="task-list" id="calTaskList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: VOCABULARY -->
+      <div class="tab-panel" id="panel-vocab">
+        <div class="ws-grid-2">
+          <div class="ws-card">
+            <div class="ws-card-head">
+              <span data-i18n="fcTitle">🃏 Flashcard 間隔重複抽背</span>
+              <div style="display:flex;gap:10px;align-items:center;">
+                <label style="font-size:13px;display:flex;align-items:center;gap:5px;cursor:pointer;color:var(--muted);">
+                  <input type="checkbox" id="fcRandomToggle" checked style="accent-color:var(--accent);">
+                  <span data-i18n="fcRandom">隨機抽題</span>
+                </label>
+                <button class="ws-btn ws-btn-secondary ws-btn-sm" id="fcNextBtn" data-i18n="fcNext">下一張 ➔</button>
+              </div>
+            </div>
+
+            <div class="flashcard-stage" id="flashcardStage">
+              <div style="position:absolute;top:14px;right:16px;" id="fcStatusBadge"></div>
+              <div class="fc-word" id="fcWord">Loading...</div>
+              <div class="fc-phonetic" id="fcPhonetic"></div>
+              <button class="ws-btn ws-btn-secondary ws-btn-sm" id="fcRevealBtn" data-i18n="fcReveal">👁️ 顯示釋義與例句</button>
+              <div class="fc-reveal" id="fcRevealBox" style="display:none;">
+                <div class="fc-meaning" id="fcMeaning"></div>
+                <div class="fc-example" id="fcExample"></div>
+              </div>
+              <div class="fc-controls">
+                <button class="ws-btn ws-btn-danger" id="fcReviewBtn" data-i18n="fcNeedReview">🔁 需複習（提高出現率）</button>
+                <button class="ws-btn ws-btn-success" id="fcMasterBtn" data-i18n="fcMastered">✅ 已熟記（+10 EXP）</button>
+              </div>
+            </div>
+
+            <div class="stat-boxes" style="margin-top:16px;margin-bottom:0;">
+              <div class="stat-box">
+                <div class="stat-val" id="vocabTotalStat">0</div>
+                <div class="stat-lbl" data-i18n="vocabTotal">總單字數</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val" id="vocabMasteredStat" style="color:var(--green);">0</div>
+                <div class="stat-lbl" data-i18n="vocabMastered">已熟記</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val" id="vocabReviewStat" style="color:var(--amber);">0</div>
+                <div class="stat-lbl" data-i18n="vocabReview">待加強複習</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ws-card">
+            <div class="ws-card-head">
+              <span data-i18n="vocabMgmtTitle">📖 單字庫管理</span>
+              <button class="ws-btn ws-btn-primary ws-btn-sm" id="toggleAddVocabBtn" data-i18n="btnAddVocab">＋ 新增單字</button>
+            </div>
+
+            <form id="addVocabForm" style="display:none;flex-direction:column;gap:8px;margin-bottom:14px;padding:12px;background:rgba(31,35,40,.04);border-radius:16px;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                <input type="text" class="ws-input" id="vWord" placeholder="英文拼字 (e.g. Ubiquitous)" required>
+                <input type="text" class="ws-input" id="vPhonetic" placeholder="KK/IPA 音標">
+              </div>
+              <div style="display:grid;grid-template-columns:96px 1fr;gap:8px;">
+                <input type="text" class="ws-input" id="vPos" placeholder="詞性 (adj.)" required>
+                <input type="text" class="ws-input" id="vMeaning" placeholder="精準中文釋義" required>
+              </div>
+              <input type="text" class="ws-input" id="vExample" placeholder="英文例句" required>
+              <button type="submit" class="ws-btn ws-btn-primary ws-btn-sm" data-i18n="btnSaveVocab">儲存至單字庫</button>
+            </form>
+
+            <input type="text" class="ws-input" id="vocabSearchInput" data-i18n-ph="phVocabSearch" placeholder="搜尋單字或中文釋義..." style="margin-bottom:10px;">
+            <div class="vocab-list" id="vocabList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: POMODORO & WHITE NOISE -->
+      <div class="tab-panel" id="panel-focus">
+        <div class="ws-grid-equal">
+          <div class="ws-card pomo-wrap">
+            <div class="ws-card-head" style="width:100%;">
+              <span data-i18n="pomoTitle">🍅 番茄鐘計時器</span>
+              <div class="pill-group">
+                <button class="filter-pill active" id="pomoFocusModeBtn" data-i18n="pomoFocusMode">專注模式</button>
+                <button class="filter-pill" id="pomoBreakModeBtn" data-i18n="pomoBreakMode">休息模式</button>
+              </div>
+            </div>
+
+            <div class="pomo-ring-box">
+              <svg viewBox="0 0 220 220">
+                <circle cx="110" cy="110" r="98" fill="none" stroke="rgba(31,35,40,.08)" stroke-width="11"/>
+                <circle id="pomoProgressCircle" cx="110" cy="110" r="98" fill="none" stroke="var(--accent)" stroke-width="11" stroke-linecap="round" stroke-dasharray="615.75" stroke-dashoffset="0"/>
+              </svg>
+              <div class="pomo-time-overlay">
+                <div class="pomo-digits" id="pomoDigits">25:00</div>
+                <div class="pomo-mode-label" id="pomoModeLabel">專注模式</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:10px;margin-bottom:18px;">
+              <button class="ws-btn ws-btn-primary" id="pomoStartBtn" style="min-width:112px;">▶ 開始</button>
+              <button class="ws-btn ws-btn-secondary" id="pomoResetBtn" data-i18n="pomoReset">↺ 重置</button>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--muted);">
+              <label style="display:flex;align-items:center;gap:6px;">
+                <span data-i18n="pomoFocusLabel">專注(分)</span>
+                <input type="number" id="pomoFocusMins" class="ws-input" value="25" min="1" max="120" style="width:66px;padding:6px 8px;">
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;">
+                <span data-i18n="pomoBreakLabel">休息(分)</span>
+                <input type="number" id="pomoBreakMins" class="ws-input" value="5" min="1" max="60" style="width:66px;padding:6px 8px;">
+              </label>
+              <button class="ws-btn ws-btn-secondary ws-btn-sm" id="pomoApplyMinsBtn" data-i18n="pomoApply">套用時間</button>
+            </div>
+          </div>
+
+          <div class="ws-card">
+            <div class="ws-card-head">
+              <span data-i18n="noiseTitle">🎧 專注白噪音合成器（Web Audio）</span>
+              <button class="ws-btn ws-btn-danger ws-btn-sm" id="stopAllNoiseBtn" data-i18n="noiseStopAll">全部靜音</button>
+            </div>
+            <p style="margin:0 0 14px;font-size:13px;color:var(--muted);" data-i18n="noiseDesc">
+              純瀏覽器原生音訊合成，無需外部音檔，支援自由混音與獨立音量控制。
+            </p>
+            <div class="noise-card">
+              <div class="noise-item" id="noise-rain">
+                <div class="noise-top">
+                  <div><div data-i18n="noiseRain">🌧️ 雨聲（Rain）</div><div style="font-size:12px;color:var(--muted);" data-i18n="noiseRainSub">溫潤濾波雨滴與環境白噪</div></div>
+                  <button class="ws-btn ws-btn-secondary ws-btn-sm noise-toggle" data-noise="rain">▶ 播放</button>
+                </div>
+                <input type="range" class="noise-slider" data-noise="rain" min="0" max="1" step="0.01" value="0.45">
+              </div>
+
+              <div class="noise-item" id="noise-cafe">
+                <div class="noise-top">
+                  <div><div data-i18n="noiseCafe">☕ 咖啡廳環境音（Cafe）</div><div style="font-size:12px;color:var(--muted);" data-i18n="noiseCafeSub">低頻暖聲交談氛圍與室內共鳴</div></div>
+                  <button class="ws-btn ws-btn-secondary ws-btn-sm noise-toggle" data-noise="cafe">▶ 播放</button>
+                </div>
+                <input type="range" class="noise-slider" data-noise="cafe" min="0" max="1" step="0.01" value="0.45">
+              </div>
+
+              <div class="noise-item" id="noise-forest">
+                <div class="noise-top">
+                  <div><div data-i18n="noiseForest">🌲 森林風聲（Forest Wind）</div><div style="font-size:12px;color:var(--muted);" data-i18n="noiseForestSub">LFO 動態掃頻微風吹拂樹梢</div></div>
+                  <button class="ws-btn ws-btn-secondary ws-btn-sm noise-toggle" data-noise="forest">▶ 播放</button>
+                </div>
+                <input type="range" class="noise-slider" data-noise="forest" min="0" max="1" step="0.01" value="0.45">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: ACHIEVEMENTS -->
+      <div class="tab-panel" id="panel-achievements">
+        <div class="ws-card" style="margin-bottom:16px;">
+          <div class="ws-card-head"><span data-i18n="growthTitle">📊 個人成長檔案</span></div>
+          <div class="stat-boxes stat-boxes-4" style="margin:0;">
+            <div class="stat-box">
+              <div class="stat-val" id="statLevel">Lv.1</div>
+              <div class="stat-lbl" data-i18n="statLvl">目前等級</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="statTotalExp">0</div>
+              <div class="stat-lbl" data-i18n="statExp">累積經驗值</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="statCompletedTasks">0</div>
+              <div class="stat-lbl" data-i18n="statDoneTasks">累計完成任務</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="statPomodoros">0</div>
+              <div class="stat-lbl" data-i18n="statPomos">完成番茄鐘數</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ws-card">
+          <div class="ws-card-head"><span data-i18n="achSysTitle">🏆 成就徽章系統</span></div>
+          <div class="ach-grid" id="achievementsGrid"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="bento-bottom" id="statsSection">
       <div class="data-card glass">
         <div class="card-head">
@@ -799,77 +1534,225 @@ input{font:inherit;color:inherit;}
 
 <nav class="mobile-nav glass" id="mobileNav">
   <button class="mnav-btn active" data-nav="home">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
-    <span data-i18n="navHome">首頁</span>
-  </button>
-  <button class="mnav-btn" data-nav="draw">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/></svg>
-    <span data-i18n="navDraw">抽籤</span>
-  </button>
-  <button class="mnav-btn" data-nav="focus">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-    <span data-i18n="navFocus">專注</span>
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+    <span data-i18n="navHomeShort">首頁</span>
   </button>
   <button class="mnav-btn" data-nav="tasks">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    <span data-i18n="navTasks">待辦</span>
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    <span data-i18n="navTasksShort">待辦</span>
+  </button>
+  <button class="mnav-btn" data-nav="draw">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.2" fill="currentColor"/></svg>
+    <span data-i18n="navDrawShort">抽籤</span>
+  </button>
+  <button class="mnav-btn" data-nav="vocab">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <span data-i18n="navVocabShort">單字</span>
+  </button>
+  <button class="mnav-btn" data-nav="focus">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span data-i18n="navFocusShort">專注</span>
   </button>
 </nav>
 
+<!-- Command Search Modal -->
 <div class="modal-backdrop" id="searchModal">
   <div class="modal-card glass">
     <div class="modal-head">
       <span data-i18n="cmdTitle">快速指令</span>
-      <button class="icon-btn" id="closeSearchBtn">
+      <button class="icon-btn" id="closeSearchBtn" aria-label="Close">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <input class="search-input" id="cmdInput" placeholder="輸入指令或功能...">
+    <input class="search-input" id="cmdInput" data-i18n-ph="phCmdInput" placeholder="輸入指令或功能...">
     <div class="cmd-list" id="cmdList"></div>
   </div>
 </div>
 
-<div class="modal-backdrop" id="tasksModal">
-  <div class="modal-card glass">
+<!-- Morning Planning Modal -->
+<div class="modal-backdrop" id="morningModal">
+  <div class="modal-card glass ws-modal">
     <div class="modal-head">
-      <span data-i18n="tasksModalTitle">今日待辦清單</span>
-      <button class="icon-btn" id="closeTasksBtn">
+      <span style="font-size:17px;" data-i18n="morningModalTitle">☀️ 晨間規劃：鎖定今日 Top 3</span>
+      <button class="icon-btn" data-close-modal="morningModal" aria-label="Close">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="todo-add"><input type="text" id="todoInput" placeholder="新增待辦事項…"><button class="btn-primary" id="todoAddBtn" type="button">新增</button></div><div id="todoList"></div><div class="todo-foot"><span id="todoCountMeta" style="font-size:12px;color:var(--muted)"></span><button class="pill-btn glass" id="todoClearDoneBtn" type="button">清除已完成</button></div>
+    <p style="margin:0 0 12px;font-size:13.5px;color:var(--muted);" data-i18n="morningModalSub">
+      從目前的待辦事項中挑選最多 3 件最重要的任務，置頂於主畫面專注推進：
+    </p>
+    <div id="morningTaskPicker" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;margin-bottom:16px;"></div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;">
+      <button class="ws-btn ws-btn-secondary" data-close-modal="morningModal" data-i18n="btnLater">稍後再說</button>
+      <button class="ws-btn ws-btn-primary" id="saveMorningTop3Btn" data-i18n="btnLockTop3">鎖定今日 Top 3</button>
+    </div>
   </div>
 </div>
+
+<!-- Evening Review Modal -->
+<div class="modal-backdrop" id="eveningModal">
+  <div class="modal-card glass ws-modal">
+    <div class="modal-head">
+      <span style="font-size:17px;" data-i18n="eveningModalTitle">🌙 晚間回顧儀式</span>
+      <button class="icon-btn" data-close-modal="eveningModal" aria-label="Close">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="stat-boxes">
+      <div class="stat-box">
+        <div class="stat-val" id="evRate">0%</div>
+        <div class="stat-lbl" data-i18n="evRateLbl">今日任務完成率</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="evExp">+0</div>
+        <div class="stat-lbl" data-i18n="evExpLbl">今日獲得 EXP</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="evVocab">0</div>
+        <div class="stat-lbl" data-i18n="evVocabLbl">今日背誦單字</div>
+      </div>
+    </div>
+    <div style="margin:12px 0 8px;font-size:13.5px;color:var(--muted);" data-i18n="evUnfinishedLbl">今日尚未完成的任務：</div>
+    <div id="evUnfinishedList" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;margin-bottom:16px;"></div>
+    <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;">
+      <button class="ws-btn ws-btn-primary" id="rolloverTomorrowBtn" data-i18n="btnRollover">⏭️ 全部順延至明天</button>
+      <button class="ws-btn ws-btn-secondary" id="completeEveningBtn" data-i18n="btnCompleteEvening">完成今日回顧</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Task Modal -->
+<div class="modal-backdrop" id="editTaskModal">
+  <div class="modal-card glass ws-modal">
+    <div class="modal-head">
+      <span style="font-size:17px;" data-i18n="editModalTitle">✏️ 編輯任務</span>
+      <button class="icon-btn" data-close-modal="editTaskModal" aria-label="Close">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="editTaskForm" style="display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="editTaskId">
+      <label style="font-size:13px;color:var(--muted);">
+        <span data-i18n="lblTaskName">任務名稱</span>
+        <input type="text" class="ws-input" id="editTaskTitle" required style="margin-top:5px;">
+      </label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <label style="font-size:13px;color:var(--muted);">
+          <span data-i18n="lblPriority">優先級</span>
+          <select class="ws-select" id="editTaskPriority" style="margin-top:5px;">
+            <option value="high">🔴 高優先</option>
+            <option value="medium">🟡 中優先</option>
+            <option value="low">🟢 低優先</option>
+          </select>
+        </label>
+        <label style="font-size:13px;color:var(--muted);">
+          <span data-i18n="lblCategory">分類標籤</span>
+          <input type="text" class="ws-input" id="editTaskCategory" list="categoryOptions" style="margin-top:5px;">
+        </label>
+      </div>
+      <label style="font-size:13px;color:var(--muted);">
+        <span data-i18n="lblDueDate">截止日期</span>
+        <input type="date" class="ws-input" id="editTaskDue" style="margin-top:5px;">
+      </label>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px;">
+        <button type="button" class="ws-btn ws-btn-secondary" data-close-modal="editTaskModal" data-i18n="btnCancel">取消</button>
+        <button type="submit" class="ws-btn ws-btn-primary" data-i18n="btnSaveChanges">儲存變更</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
 (()=>{
 const SUBJECTS=[
-  {id:'Chem',color:'#F47B5B',bg:'rgba(244,123,91,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v5.5L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 8.5V3"/><path d="M7.5 14h9"/></svg>'},
-  {id:'Bio',color:'#5F9E7E',bg:'rgba(95,158,126,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3c0 6 10 6 10 12s-10 6-10 6"/><path d="M17 3c0 6-10 6-10 12s10 6 10 6"/><path d="M8 7h8M8 17h8"/></svg>'},
-  {id:'Eng',color:'#4A90D9',bg:'rgba(74,144,217,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'},
-  {id:'Math',color:'#8B6CE2',bg:'rgba(139,108,226,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7v11"/><path d="M15 7v8a3 3 0 0 0 3 3"/></svg>'},
-  {id:'ICT',color:'#E59A38',bg:'rgba(229,154,56,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>'},
-  {id:'Chi',color:'#D96B8A',bg:'rgba(217,107,138,.16)',svg:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><rect x="5" y="7" width="14" height="9" rx="2"/></svg>'}
+  {id:'Chem',color:'#F47B5B',bg:'rgba(244,123,91,.16)',svg:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M9 3h6M10 3v5.2L5.2 17.5A2 2 0 0 0 7 20.5h10a2 2 0 0 0 1.8-3L14 8.2V3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.8 15.5h10.4l1.2 2.2a1.4 1.4 0 0 1-1.2 2.1H6.8a1.4 1.4 0 0 1-1.2-2.1l1.2-2.2z" fill="currentColor" fill-opacity=".22"/><circle cx="10.5" cy="14" r="1" fill="currentColor"/><circle cx="13.5" cy="12" r=".9" fill="currentColor"/></svg>'},
+  {id:'Bio',color:'#5F9E7E',bg:'rgba(95,158,126,.16)',svg:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M7 3c0 5 10 4 10 9s-10 4-10 9M17 3c0 5-10 4-10 9s10 4 10 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 6h7M9 9h6M9 15h6M8.5 18h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/></svg>'},
+  {id:'Eng',color:'#4A90D9',bg:'rgba(74,144,217,.16)',svg:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M2 5.5A2.5 2.5 0 0 1 4.5 3H12v16H4.5A2.5 2.5 0 0 0 2 21V5.5z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M22 5.5A2.5 2.5 0 0 0 19.5 3H12v16h7.5a2.5 2.5 0 0 1 2.5 2V5.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 3v7l1.8-1.4L19.5 10V3" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>'},
+  {id:'Math',color:'#8B6CE2',bg:'rgba(139,108,226,.16)',svg:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5.5" r="2.2" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.8"/><path d="M10.8 7.5L5.5 20.5M13.2 7.5l5.3 13M7 14.5h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 11.5h6M10.5 11.5v5.5M13.5 11.5v4.5c0 .8.5 1.2 1.2 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/></svg>'},
+  {id:'ICT',color:'#E59A38',bg:'rgba(229,154,56,.16)',svg:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="3" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8"/><rect x="9.5" y="9.5" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'},
+  {id:'Chi',color:'#D96B8A',bg:'rgba(217,107,138,.16)',svg:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8"/><path d="M12 6.8v10.4M7.8 9.8h8.4v4.2H7.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>'}
 ];
 
 const I18N={
   zh:{
-    crumbHome:'首頁',navHome:'首頁',navDraw:'溫習抽籤',navFocus:'專注計時',navTasks:'待辦清單',navStats:'學習數據',
-    searchHint:'搜尋',cardDrawLabel:'今日溫習',cardTasksLabel:'待辦事項',cardTimerLabel:'專注計時',cardWaterLabel:'今日補水',
+    crumbHome:'首頁',navHome:'首頁',navTasks:'待辦清單',navCalendar:'日曆規劃',navDraw:'溫習抽籤',
+    navVocab:'高階單字庫',navFocus:'番茄鐘與白噪音',navStats:'學習與成就',
+    navHomeShort:'首頁',navTasksShort:'待辦',navDrawShort:'抽籤',navVocabShort:'單字',navFocusShort:'專注',
+    searchHint:'搜尋',btnMorning:'晨間規劃',btnEvening:'晚間回顧',
+    cardDrawLabel:'今日溫習',cardTasksLabel:'待辦事項',cardTimerLabel:'專注計時',cardTimerBreak:'休息計時',cardWaterLabel:'今日補水',
     drawTitle:'6 科溫習抽籤',drawSub:'Chem · Bio · Eng · Math · ICT · Chi',modeUnique:'不重複',modeRepeat:'可重複',
     resetDraw:'重設本輪',startDraw:'開始抽籤',historyTitle:'抽籤紀錄',clearHistory:'清除',
-    chartTitle:'每週學習趨勢',distTitle:'科目抽籤分佈',cmdTitle:'快速指令',tasksModalTitle:'今日待辦清單',
+    wsTitle:'Wesley Flow · 任務與生產力中心',wsSub:'Top 3 重點推進 · 子任務拆解 · 日曆 · 高階單字 · 番茄鐘與白噪音',
+    tabTasks:'待辦清單',tabCalendar:'日曆規劃',tabVocab:'高階單字庫',tabFocus:'番茄鐘與白噪音',tabAch:'成就徽章',
+    top3Title:'⭐ 今日最重要的 3 件事（Top 3 Priorities）',top3Adjust:'挑選 / 調整',
+    taskMgmtTitle:'📝 任務管理',btnAddTask:'＋ 新增任務',filterAll:'全部',filterActive:'進行中',filterDone:'已完成',btnClearDone:'清除已完成',
+    btnCalToday:'回到今天',btnAddShort:'新增',
+    fcTitle:'🃏 Flashcard 間隔重複抽背',fcRandom:'隨機抽題',fcNext:'下一張 ➔',fcReveal:'👁️ 顯示釋義與例句',
+    fcNeedReview:'🔁 需複習（提高出現率）',fcMastered:'✅ 已熟記（+10 EXP）',
+    vocabTotal:'總單字數',vocabMastered:'已熟記',vocabReview:'待加強複習',
+    vocabMgmtTitle:'📖 單字庫管理',btnAddVocab:'＋ 新增單字',btnSaveVocab:'儲存至單字庫',
+    pomoTitle:'🍅 番茄鐘計時器',pomoFocusMode:'專注模式',pomoBreakMode:'休息模式',pomoReset:'↺ 重置',
+    pomoFocusLabel:'專注(分)',pomoBreakLabel:'休息(分)',pomoApply:'套用時間',
+    noiseTitle:'🎧 專注白噪音合成器（Web Audio）',noiseStopAll:'全部靜音',
+    noiseDesc:'純瀏覽器原生音訊合成，無需外部音檔，支援自由混音與獨立音量控制。',
+    noiseRain:'🌧️ 雨聲（Rain）',noiseRainSub:'溫潤濾波雨滴與環境白噪',
+    noiseCafe:'☕ 咖啡廳環境音（Cafe）',noiseCafeSub:'低頻暖聲交談氛圍與室內共鳴',
+    noiseForest:'🌲 森林風聲（Forest Wind）',noiseForestSub:'LFO 動態掃頻微風吹拂樹梢',
+    growthTitle:'📊 個人成長檔案',statLvl:'目前等級',statExp:'累積經驗值',statDoneTasks:'累計完成任務',statPomos:'完成番茄鐘數',
+    achSysTitle:'🏆 成就徽章系統',
+    chartTitle:'每週學習趨勢',distTitle:'科目抽籤分佈',cmdTitle:'快速指令',
+    morningModalTitle:'☀️ 晨間規劃：鎖定今日 Top 3',
+    morningModalSub:'從目前的待辦事項中挑選最多 3 件最重要的任務，置頂於主畫面專注推進：',
+    btnLater:'稍後再說',btnLockTop3:'鎖定今日 Top 3',
+    eveningModalTitle:'🌙 晚間回顧儀式',evRateLbl:'今日任務完成率',evExpLbl:'今日獲得 EXP',evVocabLbl:'今日背誦單字',
+    evUnfinishedLbl:'今日尚未完成的任務：',btnRollover:'⏭️ 全部順延至明天',btnCompleteEvening:'完成今日回顧',
+    editModalTitle:'✏️ 編輯任務',lblTaskName:'任務名稱',lblPriority:'優先級',lblCategory:'分類標籤',lblDueDate:'截止日期',
+    btnCancel:'取消',btnSaveChanges:'儲存變更',
+    phTaskTitle:'輸入新任務名稱...',phTaskCategory:'分類標籤',phCalTask:'直接在此日期新增任務...',
+    phVocabSearch:'搜尋單字或中文釋義...',phCmdInput:'輸入指令或功能...',
     clickToDraw:'點擊抽籤',readyDraw:'準備抽籤',readyHint:'點擊下方按鈕隨機抽取下一個溫習科目',
     weather:'香港 18°C 多雲',morning:'早安，Wesley',afternoon:'午安，Wesley',evening:'晚安，Wesley',
     chartSubA:'本週每日溫習節數',chartSubB:'本週專注分鐘數',distSub:'依抽籤紀錄即時同步',
     done:'完成',cups:'杯',noHist:'尚無抽籤紀錄'
   },
   en:{
-    crumbHome:'Home',navHome:'Home',navDraw:'Study Draw',navFocus:'Focus Timer',navTasks:'Tasks',navStats:'Analytics',
-    searchHint:'Search',cardDrawLabel:'Today Study',cardTasksLabel:'Tasks',cardTimerLabel:'Focus Timer',cardWaterLabel:'Hydration',
+    crumbHome:'Home',navHome:'Home',navTasks:'Tasks',navCalendar:'Calendar',navDraw:'Study Draw',
+    navVocab:'Vocabulary',navFocus:'Pomodoro & Noise',navStats:'Stats & Badges',
+    navHomeShort:'Home',navTasksShort:'Tasks',navDrawShort:'Draw',navVocabShort:'Vocab',navFocusShort:'Focus',
+    searchHint:'Search',btnMorning:'Morning Plan',btnEvening:'Evening Review',
+    cardDrawLabel:'Today Study',cardTasksLabel:'Tasks',cardTimerLabel:'Focus Timer',cardTimerBreak:'Break Timer',cardWaterLabel:'Hydration',
     drawTitle:'6-Subject Study Draw',drawSub:'Chem · Bio · Eng · Math · ICT · Chi',modeUnique:'Unique',modeRepeat:'Repeatable',
     resetDraw:'Reset Round',startDraw:'Draw Subject',historyTitle:'Draw History',clearHistory:'Clear',
-    chartTitle:'Weekly Trend',distTitle:'Subject Distribution',cmdTitle:'Quick Commands',tasksModalTitle:'Today Tasks',
+    wsTitle:'Wesley Flow · Productivity Workspace',wsSub:'Top 3 Priorities · Subtasks · Calendar · GRE Vocab · Pomodoro & White Noise',
+    tabTasks:'Tasks',tabCalendar:'Calendar',tabVocab:'Vocabulary',tabFocus:'Pomodoro & Noise',tabAch:'Achievements',
+    top3Title:'⭐ Today’s Top 3 Priorities',top3Adjust:'Pick / Edit',
+    taskMgmtTitle:'📝 Task Manager',btnAddTask:'+ Add Task',filterAll:'All',filterActive:'Active',filterDone:'Completed',btnClearDone:'Clear Done',
+    btnCalToday:'Today',btnAddShort:'Add',
+    fcTitle:'🃏 Spaced Repetition Flashcards',fcRandom:'Random',fcNext:'Next ➔',fcReveal:'👁️ Reveal Meaning & Example',
+    fcNeedReview:'🔁 Review Again',fcMastered:'✅ Mastered (+10 EXP)',
+    vocabTotal:'Total Words',vocabMastered:'Mastered',vocabReview:'Needs Review',
+    vocabMgmtTitle:'📖 Word Bank',btnAddVocab:'+ New Word',btnSaveVocab:'Save Word',
+    pomoTitle:'🍅 Pomodoro Timer',pomoFocusMode:'Focus',pomoBreakMode:'Break',pomoReset:'↺ Reset',
+    pomoFocusLabel:'Focus (min)',pomoBreakLabel:'Break (min)',pomoApply:'Apply',
+    noiseTitle:'🎧 White Noise Synth (Web Audio)',noiseStopAll:'Mute All',
+    noiseDesc:'Zero-dependency browser audio synthesis with real-time mixing and volume sliders.',
+    noiseRain:'🌧️ Rain',noiseRainSub:'Warm filtered raindrops & ambient noise',
+    noiseCafe:'☕ Cafe Ambience',noiseCafeSub:'Low-frequency warm cafe murmur',
+    noiseForest:'🌲 Forest Wind',noiseForestSub:'LFO-modulated breeze through treetops',
+    growthTitle:'📊 Personal Growth',statLvl:'Level',statExp:'Total EXP',statDoneTasks:'Tasks Completed',statPomos:'Pomodoros',
+    achSysTitle:'🏆 Achievements',
+    chartTitle:'Weekly Trend',distTitle:'Subject Distribution',cmdTitle:'Quick Commands',
+    morningModalTitle:'☀️ Morning Plan: Lock Top 3',
+    morningModalSub:'Pick up to 3 top-priority tasks from your list to pin on your dashboard today:',
+    btnLater:'Later',btnLockTop3:'Lock Top 3',
+    eveningModalTitle:'🌙 Evening Review',evRateLbl:'Completion Rate',evExpLbl:'EXP Today',evVocabLbl:'Words Reviewed',
+    evUnfinishedLbl:'Unfinished tasks due today or earlier:',btnRollover:'⏭️ Rollover to Tomorrow',btnCompleteEvening:'Complete Review',
+    editModalTitle:'✏️ Edit Task',lblTaskName:'Task Title',lblPriority:'Priority',lblCategory:'Category',lblDueDate:'Due Date',
+    btnCancel:'Cancel',btnSaveChanges:'Save Changes',
+    phTaskTitle:'Add a new task...',phTaskCategory:'Category',phCalTask:'Add task on this date...',
+    phVocabSearch:'Search word or meaning...',phCmdInput:'Type a command or section...',
     clickToDraw:'Tap to Draw',readyDraw:'Ready to Draw',readyHint:'Tap the button below to pick your next subject',
     weather:'HK 18°C Cloudy',morning:'Good morning, Wesley',afternoon:'Good afternoon, Wesley',evening:'Good evening, Wesley',
     chartSubA:'Daily study sessions this week',chartSubB:'Daily focus minutes this week',distSub:'Synced live with draw history',
@@ -877,16 +1760,146 @@ const I18N={
   }
 };
 
+const STORAGE_KEY='wesley_todo_app_v1';
+const todayStr=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+const tomorrowStr=()=>{const d=new Date();d.setDate(d.getDate()+1);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+const escapeHtml=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+const DEFAULT_VOCAB=[
+  {id:'v1',word:'Ubiquitous',phonetic:'/juːˈbɪk.wɪ.təs/',pos:'adj.',meaning:'無所不在的、普遍存在的',example:'Smartphones have become ubiquitous in modern academic and professional life.',status:'new',weight:3},
+  {id:'v2',word:'Ephemeral',phonetic:'/ɪˈfem.ər.əl/',pos:'adj.',meaning:'短暫的、轉瞬即逝的',example:'Fame on social media is often ephemeral, fading as quickly as it arrives.',status:'new',weight:3},
+  {id:'v3',word:'Pragmatic',phonetic:'/præɡˈmæt.ɪk/',pos:'adj.',meaning:'務實的、講求實效的',example:'The committee adopted a pragmatic approach to solving the budget shortfall.',status:'new',weight:3},
+  {id:'v4',word:'Mitigate',phonetic:'/ˈmɪt.ɪ.ɡeɪt/',pos:'v.',meaning:'減輕、緩和（傷害或風險）',example:'Strict encryption protocols were implemented to mitigate data breach risks.',status:'new',weight:3},
+  {id:'v5',word:'Ambiguous',phonetic:'/æmˈbɪɡ.ju.əs/',pos:'adj.',meaning:'模稜兩可的、含糊不清的',example:'The contract contained ambiguous clauses that led to a legal dispute.',status:'new',weight:3},
+  {id:'v6',word:'Corroborate',phonetic:'/kəˈrɒb.ə.reɪt/',pos:'v.',meaning:'證實、確證（理論或陳述）',example:'Recent archaeological findings corroborate the historian’s hypothesis.',status:'new',weight:3},
+  {id:'v7',word:'Disparate',phonetic:'/ˈdɪs.pər.ət/',pos:'adj.',meaning:'截然不同的、無法比較的',example:'The research synthesizes data from disparate fields such as linguistics and neuroscience.',status:'new',weight:3},
+  {id:'v8',word:'Equivocal',phonetic:'/ɪˈkwɪv.ə.kəl/',pos:'adj.',meaning:'含糊其辭的、可作多種解釋的',example:'Her equivocal response left the audience unsure of her true stance.',status:'new',weight:3},
+  {id:'v9',word:'Fastidious',phonetic:'/fæsˈtɪd.i.əs/',pos:'adj.',meaning:'一絲不苟的、挑剔的',example:'He is fastidious about citing every primary source accurately.',status:'new',weight:3},
+  {id:'v10',word:'Gregarious',phonetic:'/ɡrɪˈɡeə.ri.əs/',pos:'adj.',meaning:'愛交際的、群居的',example:'Despite her gregarious nature, she prefers studying alone in silence.',status:'new',weight:3},
+  {id:'v11',word:'Iconoclast',phonetic:'/aɪˈkɒn.ə.klæst/',pos:'n.',meaning:'打破傳統觀念者、反叛者',example:'As a scientific iconoclast, she challenged decades of established dogma.',status:'new',weight:3},
+  {id:'v12',word:'Laconic',phonetic:'/ləˈkɒn.ɪk/',pos:'adj.',meaning:'言簡意賅的、簡練的',example:'His laconic summary captured the entire argument in just two sentences.',status:'new',weight:3},
+  {id:'v13',word:'Magnanimous',phonetic:'/mæɡˈnæn.ɪ.məs/',pos:'adj.',meaning:'寬宏大量的、慷慨的',example:'In a magnanimous gesture, the winner praised her opponent’s resilience.',status:'new',weight:3},
+  {id:'v14',word:'Nefarious',phonetic:'/nɪˈfeə.ri.əs/',pos:'adj.',meaning:'邪惡的、不法的',example:'Cybersecurity analysts uncovered a nefarious scheme targeting financial institutions.',status:'new',weight:3},
+  {id:'v15',word:'Obfuscate',phonetic:'/ˈɒb.fʌs.keɪt/',pos:'v.',meaning:'使模糊、刻意混淆視聽',example:'Excessive jargon tends to obfuscate rather than clarify complex ideas.',status:'new',weight:3},
+  {id:'v16',word:'Pernicious',phonetic:'/pəˈnɪʃ.əs/',pos:'adj.',meaning:'有害的、惡性的、潛移默化造成傷害的',example:'Chronic sleep deprivation has a pernicious effect on cognitive performance.',status:'new',weight:3},
+  {id:'v17',word:'Quixotic',phonetic:'/kwɪkˈsɒt.ɪk/',pos:'adj.',meaning:'不切實際的、唐吉訶德式的',example:'Critics dismissed the plan to colonize Mars within five years as quixotic.',status:'new',weight:3},
+  {id:'v18',word:'Recalcitrant',phonetic:'/rɪˈkæl.sɪ.trənt/',pos:'adj.',meaning:'頑強反抗的、難以管教的',example:'The mediator struggled to negotiate with recalcitrant stakeholders.',status:'new',weight:3},
+  {id:'v19',word:'Sagacious',phonetic:'/səˈɡeɪ.ʃəs/',pos:'adj.',meaning:'睿智的、有洞察力的',example:'Her sagacious mentorship guided the lab through its most difficult project.',status:'new',weight:3},
+  {id:'v20',word:'Taciturn',phonetic:'/ˈtæs.ɪ.tɜːn/',pos:'adj.',meaning:'沉默寡言的',example:'Though taciturn in meetings, his written reports were remarkably thorough.',status:'new',weight:3},
+  {id:'v21',word:'Venerable',phonetic:'/ˈven.ər.ə.bəl/',pos:'adj.',meaning:'德高望重的、古老而受尊敬的',example:'The venerable institution has trained leading scholars for three centuries.',status:'new',weight:3},
+  {id:'v22',word:'Zealous',phonetic:'/ˈzel.əs/',pos:'adj.',meaning:'熱忱的、狂熱的',example:'The zealous volunteers worked tirelessly to restore the coastal habitat.',status:'new',weight:3},
+  {id:'v23',word:'Alacrity',phonetic:'/əˈlæk.rə.ti/',pos:'n.',meaning:'欣然同意、敏捷、樂意',example:'She accepted the fellowship offer with unmistakable alacrity.',status:'new',weight:3},
+  {id:'v24',word:'Cacophony',phonetic:'/kəˈkɒf.ə.ni/',pos:'n.',meaning:'刺耳的雜音、不和諧音',example:'Noise-canceling headphones shielded him from the cacophony of rush-hour traffic.',status:'new',weight:3},
+  {id:'v25',word:'Enervate',phonetic:'/ˈen.ə.veɪt/',pos:'v.',meaning:'使衰弱、使精疲力竭',example:'The oppressive humidity began to enervate the marathon runners.',status:'new',weight:3},
+  {id:'v26',word:'Garrulous',phonetic:'/ˈɡær.əl.əs/',pos:'adj.',meaning:'喋喋不休的、饒舌的',example:'A garrulous passenger recounted his entire life story during the flight.',status:'new',weight:3},
+  {id:'v27',word:'Inexorable',phonetic:'/ɪˈnek.sər.ə.bəl/',pos:'adj.',meaning:'不可阻擋的、無情的',example:'The inexorable pace of technological change demands lifelong learning.',status:'new',weight:3},
+  {id:'v28',word:'Lucid',phonetic:'/ˈluː.sɪd/',pos:'adj.',meaning:'清晰易懂的、頭腦清醒的',example:'The professor delivered a lucid explanation of quantum entanglement.',status:'new',weight:3},
+  {id:'v29',word:'Ostentatious',phonetic:'/ˌɒs.tenˈteɪ.ʃəs/',pos:'adj.',meaning:'炫耀的、鋪張的',example:'They preferred minimalist elegance over ostentatious displays of wealth.',status:'new',weight:3},
+  {id:'v30',word:'Sycophant',phonetic:'/ˈsɪk.ə.fænt/',pos:'n.',meaning:'阿諛奉承者、馬屁精',example:'A wise leader surrounds herself with honest critics rather than sycophants.',status:'new',weight:3}
+];
+
+const ACHIEVEMENTS=[
+  {id:'first_task',icon:'🌱',name:'初出茅廬',nameEn:'First Step',desc:'完成第 1 項待辦任務',descEn:'Complete your 1st task',check:s=>s.stats.totalTasksCompleted>=1},
+  {id:'focus_master',icon:'🎯',name:'專注大師',nameEn:'Focus Master',desc:'完成 1 次番茄鐘專注',descEn:'Complete 1 Pomodoro session',check:s=>s.stats.totalPomodoros>=1},
+  {id:'vocab_hunter',icon:'📚',name:'詞彙獵人',nameEn:'Vocab Hunter',desc:'熟記 5 個高難度單字',descEn:'Master 5 advanced words',check:s=>s.vocab.filter(v=>v.status==='mastered').length>=5},
+  {id:'streak_pro',icon:'🔥',name:'連勝達人',nameEn:'Task Pro',desc:'累計完成 5 項任務',descEn:'Complete 5 total tasks',check:s=>s.stats.totalTasksCompleted>=5},
+  {id:'morning_hero',icon:'☀️',name:'高效規劃師',nameEn:'Morning Planner',desc:'完成一次晨間 Top 3 規劃',descEn:'Lock your Morning Top 3 once',check:s=>s.stats.morningPlansDone>=1},
+  {id:'evening_sage',icon:'🌙',name:'反思行者',nameEn:'Evening Sage',desc:'完成一次晚間回顧儀式',descEn:'Complete 1 Evening Review',check:s=>s.stats.eveningReviewsDone>=1}
+];
+
 let lang=localStorage.getItem('wesley_lang')||'zh';
 let accent=localStorage.getItem('wesley_accent')||'#F47B5B';
 let drawMode=localStorage.getItem('wesley_draw_mode')||'unique';
 let usedIds=JSON.parse(localStorage.getItem('wesley_used')||'[]');
 let history=JSON.parse(localStorage.getItem('wesley_history')||'[]');
 let water=Number(localStorage.getItem('wesley_water')||4);
-let todos=JSON.parse(localStorage.getItem('wesley_todos')||'[{"id":1,"t":"Chem Organic Revision","d":true},{"id":2,"t":"Bio Past Paper MCQ","d":true},{"id":3,"t":"Math Calculus Practice","d":false},{"id":4,"t":"ICT SQL & Logic","d":false}]');
 let dsMode='A';
-let timerSec=25*60,timerRun=false,timerId=null,drawing=false;
+let drawing=false;
 
+function createDefaultState(){
+  const today=todayStr();
+  let initialTasks=[
+    {id:'t1',title:'Chem Organic Revision',priority:'high',category:'Chem',dueDate:today,completed:true,subtasks:[]},
+    {id:'t2',title:'Bio Past Paper MCQ',priority:'high',category:'Bio',dueDate:today,completed:false,subtasks:[
+      {id:'st1',title:'完成 Flashcard 第一輪抽背',done:false},
+      {id:'st2',title:'標記需加強複習的單字',done:false}
+    ]},
+    {id:'t3',title:'Math Calculus Practice',priority:'medium',category:'Math',dueDate:today,completed:false,subtasks:[]},
+    {id:'t4',title:'使用番茄鐘完成 25 分鐘專注',priority:'medium',category:'學習',dueDate:today,completed:false,subtasks:[]}
+  ];
+  try{
+    const legacyRaw=localStorage.getItem('wesley_todos');
+    if(legacyRaw){
+      const legacy=JSON.parse(legacyRaw);
+      if(Array.isArray(legacy)&&legacy.length){
+        initialTasks=legacy.map((x,idx)=>({
+          id:'t_leg_'+(x.id||idx),
+          title:String(x.t||'Task'),
+          priority:'medium',
+          category:'學習',
+          dueDate:today,
+          completed:!!x.d,
+          subtasks:[]
+        }));
+      }
+    }
+  }catch{}
+  const firstActive=initialTasks.filter(t=>!t.completed).slice(0,3).map(t=>t.id);
+  return {
+    tasks:initialTasks,
+    vocab:DEFAULT_VOCAB.map(v=>({...v})),
+    top3:{date:today,ids:firstActive},
+    gamify:{exp:0,coins:0,unlockedAchievements:[]},
+    stats:{totalTasksCompleted:0,totalPomodoros:0,morningPlansDone:0,eveningReviewsDone:0},
+    daily:{date:today,expEarned:0,vocabReviewed:0,pomodoros:0,morningPrompted:false},
+    pomoSettings:{focusMins:25,breakMins:5}
+  };
+}
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw){
+      const s=createDefaultState();
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(s));
+      return s;
+    }
+    const parsed=JSON.parse(raw);
+    const def=createDefaultState();
+    const merged={
+      ...def,
+      ...parsed,
+      gamify:{...def.gamify,...(parsed.gamify||{})},
+      stats:{...def.stats,...(parsed.stats||{})},
+      daily:{...def.daily,...(parsed.daily||{})},
+      pomoSettings:{...def.pomoSettings,...(parsed.pomoSettings||{})},
+      top3:parsed.top3||def.top3
+    };
+    if(!Array.isArray(merged.vocab)||merged.vocab.length===0)merged.vocab=DEFAULT_VOCAB.map(v=>({...v}));
+    const t=todayStr();
+    if(merged.daily.date!==t)merged.daily={date:t,expEarned:0,vocabReviewed:0,pomodoros:0,morningPrompted:false};
+    if(merged.top3.date!==t)merged.top3={date:t,ids:[]};
+    return merged;
+  }catch{
+    return createDefaultState();
+  }
+}
+
+let state=loadState();
+function saveState(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+}
+
+function showToast(msg){
+  const c=document.getElementById('toastContainer');
+  const el=document.createElement('div');
+  el.className='toast';
+  el.textContent=msg;
+  c.appendChild(el);
+  setTimeout(()=>el.remove(),3200);
+}
+
+/* ================== THEME & LANG ================== */
 function hexToRgb(hex){
   const h=hex.replace('#','');
   const n=parseInt(h.length===3?h.split('').map(c=>c+c).join(''):h,16);
@@ -908,6 +1921,7 @@ function applyAccent(hex){
   });
   document.getElementById('customColorDot').classList.toggle('active',!matched);
   document.getElementById('customColorInput').value=hex;
+  renderPomo();
 }
 
 function applyLang(){
@@ -917,16 +1931,25 @@ function applyLang(){
     const k=el.dataset.i18n;
     if(t[k])el.textContent=t[k];
   });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.dataset.i18nPh;
+    if(t[k])el.placeholder=t[k];
+  });
   document.getElementById('weatherText').textContent=t.weather;
   document.getElementById('distSub').textContent=t.distSub;
   updateClock();
   renderDrawState();
-  renderTasksCard();
+  renderTasks();
+  renderCalendar();
+  renderFlashcard();
+  renderVocabList();
+  renderPomo();
+  renderAchievements();
   renderWater();
   renderChart();
-  renderDist();
 }
 
+/* ================== CLOCK & HERO ================== */
 function updateClock(){
   const now=new Date();
   const h=now.getHours();
@@ -950,6 +1973,7 @@ function updateClock(){
   document.getElementById('orbitHour').setAttribute('transform',`rotate(${hDeg} 100 100)`);
 }
 
+/* ================== STUDY DRAW ================== */
 function renderDrawState(){
   const t=I18N[lang];
   const last=history[0];
@@ -1021,6 +2045,7 @@ function runDraw(){
   },75);
 }
 
+/* ================== CHARTS & WATER ================== */
 function renderChart(){
   const days=lang==='zh'?['一','二','三','四','五','六','日']:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
   const vals=dsMode==='A'?[3,5,4,6,7,4,5]:[75,110,90,135,160,95,120];
@@ -1033,10 +2058,7 @@ function renderChart(){
 }
 
 function renderDist(){
-  const counts=SUBJECTS.map(s=>({
-    ...s,
-    c:history.filter(h=>h.id===s.id).length
-  }));
+  const counts=SUBJECTS.map(s=>({...s,c:history.filter(h=>h.id===s.id).length}));
   const total=counts.reduce((a,b)=>a+b.c,0);
   const top4=[...counts].sort((a,b)=>b.c-a.c).slice(0,4);
   document.getElementById('multiBar').innerHTML=total
@@ -1048,53 +2070,870 @@ function renderDist(){
   }).join('');
 }
 
-function renderTasksCard(){
-  const done=todos.filter(x=>x.d).length;
-  document.getElementById('cardTasksValue').textContent=`${done} / ${todos.length} ${I18N[lang].done}`;
-  document.getElementById('todoList').innerHTML=todos.map(x=>`
-    <div class="todo-row ${x.d?'done':''}" data-tid="${x.id}">
-      <div class="todo-check">${x.d?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg>':''}</div>
-      <span>${x.t}</span>
-    </div>`).join('');
-}
-
 function renderWater(){
   document.getElementById('cardWaterValue').textContent=`${water} / 8 ${I18N[lang].cups}`;
 }
 
-function toggleTimer(){
-  if(timerRun){
-    clearInterval(timerId);timerRun=false;
-    document.getElementById('timerBadge').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
-  }else{
-    timerRun=true;
-    document.getElementById('timerBadge').innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
-    timerId=setInterval(()=>{
-      timerSec=timerSec>0?timerSec-1:25*60;
-      const m=String(Math.floor(timerSec/60)).padStart(2,'0');
-      const s=String(timerSec%60).padStart(2,'0');
-      document.getElementById('cardTimerValue').textContent=`${m}:${s}`;
-    },1000);
+/* ================== GAMIFICATION & ACHIEVEMENTS ================== */
+function addRewards(exp,coins,reason){
+  const prevLevel=Math.floor(state.gamify.exp/100)+1;
+  state.gamify.exp+=exp;
+  state.gamify.coins+=coins;
+  state.daily.expEarned+=exp;
+  const newLevel=Math.floor(state.gamify.exp/100)+1;
+  checkAchievements();
+  saveState();
+  renderGamifyHeader();
+  renderAchievements();
+  if(newLevel>prevLevel){
+    showToast(lang==='zh'?`🎉 升級啦！目前等級 Lv.${newLevel}！`:`🎉 Level up! Now Lv.${newLevel}!`);
+  }else if(reason){
+    showToast(`${reason} (+${exp} EXP${coins?`, +${coins} 🪙`:''})`);
   }
 }
 
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    if(!state.gamify.unlockedAchievements.includes(a.id)&&a.check(state)){
+      state.gamify.unlockedAchievements.push(a.id);
+      const nm=lang==='zh'?a.name:a.nameEn;
+      showToast(lang==='zh'?`🏆 解鎖成就：${a.icon} ${nm}！`:`🏆 Unlocked: ${a.icon} ${nm}!`);
+    }
+  });
+}
+
+function renderGamifyHeader(){
+  const lvl=Math.floor(state.gamify.exp/100)+1;
+  const cur=state.gamify.exp%100;
+  document.getElementById('hdrLevel').textContent=`Lv.${lvl}`;
+  document.getElementById('hdrExpFill').style.width=`${cur}%`;
+  document.getElementById('hdrExpText').textContent=`${cur}/100 EXP`;
+  document.getElementById('hdrCoins').textContent=state.gamify.coins;
+  const validTop3=state.top3.ids.filter(id=>state.tasks.some(t=>t.id===id));
+  document.getElementById('morningDot').style.display=(!state.daily.morningPrompted&&validTop3.length===0)?'inline-block':'none';
+}
+
+function renderAchievements(){
+  const lvl=Math.floor(state.gamify.exp/100)+1;
+  document.getElementById('statLevel').textContent=`Lv.${lvl}`;
+  document.getElementById('statTotalExp').textContent=state.gamify.exp;
+  document.getElementById('statCompletedTasks').textContent=state.stats.totalTasksCompleted;
+  document.getElementById('statPomodoros').textContent=state.stats.totalPomodoros;
+
+  const grid=document.getElementById('achievementsGrid');
+  grid.innerHTML=ACHIEVEMENTS.map(a=>{
+    const unlocked=state.gamify.unlockedAchievements.includes(a.id);
+    const nm=lang==='zh'?a.name:a.nameEn;
+    const ds=lang==='zh'?a.desc:a.descEn;
+    return `<div class="ach-card ${unlocked?'unlocked':'locked'}">
+      <div class="ach-icon">${a.icon}</div>
+      <div class="ach-name">${nm}</div>
+      <div class="ach-desc">${ds}</div>
+      <div style="margin-top:8px;font-size:11px;color:${unlocked?'var(--green)':'var(--muted)'};">
+        ${unlocked?(lang==='zh'?'✓ 已解鎖':'✓ Unlocked'):(lang==='zh'?'🔒 未解鎖':'🔒 Locked')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ================== WORKSPACE TABS ================== */
+function switchWorkspaceTab(tabName,shouldScroll=false){
+  document.querySelectorAll('#workspaceTabs .ws-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tabName));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id===`panel-${tabName}`));
+  if(tabName==='calendar')renderCalendar();
+  if(tabName==='achievements')renderAchievements();
+  if(shouldScroll)document.getElementById('workspaceSection').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.getElementById('workspaceTabs').addEventListener('click',e=>{
+  const btn=e.target.closest('.ws-tab');
+  if(!btn)return;
+  switchWorkspaceTab(btn.dataset.tab,false);
+});
+document.getElementById('gamifyPill').addEventListener('click',()=>switchWorkspaceTab('achievements',true));
+
+/* ================== TASKS & TOP 3 & SUBTASKS ================== */
+let currentFilter='all';
+let currentCatFilter='all';
+document.getElementById('taskDueInput').value=todayStr();
+
+function renderTop3(){
+  const container=document.getElementById('top3Container');
+  const validIds=state.top3.ids.filter(id=>state.tasks.some(t=>t.id===id));
+  if(validIds.length===0){
+    container.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:12px;color:var(--muted);font-size:13px;">
+      ${lang==='zh'?'尚未鎖定今日最重要的 3 件事，點擊「挑選 / 調整」或「☀️ 晨間規劃」開始！':'No Top 3 tasks pinned yet. Tap "Pick / Edit" or "☀️ Morning Plan" to start!'}
+    </div>`;
+    return;
+  }
+  container.innerHTML=[0,1,2].map(idx=>{
+    const id=validIds[idx];
+    const task=state.tasks.find(t=>t.id===id);
+    if(!task){
+      return `<div class="top3-slot" style="opacity:.5;border-style:dashed;"><div class="top3-rank">${idx+1}</div><div style="font-size:12.5px;color:var(--muted);">${lang==='zh'?'空位（可從晨間規劃加入）':'Empty slot'}</div></div>`;
+    }
+    return `<div class="top3-slot ${task.completed?'done':''}">
+      <div class="top3-rank">${idx+1}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;${task.completed?'text-decoration:line-through;color:var(--muted);':''}">${escapeHtml(task.title)}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:3px;">${escapeHtml(task.category)} ${task.dueDate?'· '+task.dueDate:''}</div>
+      </div>
+      <button class="task-check ${task.completed?'checked':''}" data-action="toggle-task" data-id="${escapeHtml(task.id)}" aria-label="Toggle">${task.completed?'✓':''}</button>
+    </div>`;
+  }).join('');
+}
+
+function updateCategoryDropdown(){
+  const sel=document.getElementById('taskCategoryFilter');
+  const cats=[...new Set(state.tasks.map(t=>t.category).filter(Boolean))];
+  const prev=currentCatFilter;
+  const allLbl=lang==='zh'?'所有分類':'All Categories';
+  sel.innerHTML=`<option value="all">${allLbl}</option>`+cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  sel.value=cats.includes(prev)?prev:'all';
+  currentCatFilter=sel.value;
+}
+
+function renderTaskItemHTML(task){
+  const pLabels=lang==='zh'?{high:'高優先',medium:'中優先',low:'低優先'}:{high:'High',medium:'Medium',low:'Low'};
+  const pLabel=pLabels[task.priority]||pLabels.medium;
+  const isOverdue=task.dueDate&&!task.completed&&task.dueDate<todayStr();
+  const isTop3=state.top3.ids.includes(task.id);
+  const subs=task.subtasks||[];
+  const doneSubs=subs.filter(s=>s.done).length;
+  const pct=subs.length?Math.round((doneSubs/subs.length)*100):0;
+
+  return `<div class="task-item ${task.completed?'completed':''}">
+    <div class="task-row">
+      <button class="task-check ${task.completed?'checked':''}" data-action="toggle-task" data-id="${escapeHtml(task.id)}" aria-label="Toggle">${task.completed?'✓':''}</button>
+      <div class="task-main">
+        <div class="task-title">${escapeHtml(task.title)}</div>
+        <div class="task-meta">
+          ${isTop3?'<span class="badge badge-top3">⭐ Top 3</span>':''}
+          <span class="badge badge-${task.priority}">${pLabel}</span>
+          ${task.category?`<span class="badge badge-cat">#${escapeHtml(task.category)}</span>`:''}
+          ${task.dueDate?`<span class="badge ${isOverdue?'badge-overdue':'badge-date'}">📅 ${escapeHtml(task.dueDate)}${isOverdue?(lang==='zh'?' (已逾期)':' (Overdue)'):''}</span>`:''}
+        </div>
+      </div>
+      <div class="task-actions">
+        <button class="ws-icon-btn" title="${lang==='zh'?'編輯':'Edit'}" data-action="edit-task" data-id="${escapeHtml(task.id)}">✏️</button>
+        <button class="ws-icon-btn del" title="${lang==='zh'?'刪除':'Delete'}" data-action="delete-task" data-id="${escapeHtml(task.id)}">🗑️</button>
+      </div>
+    </div>
+    <div class="subtasks-box">
+      ${subs.length?`
+        <div class="subtask-progress">
+          <span>${lang==='zh'?'子任務進度':'Subtasks'} ${doneSubs}/${subs.length} (${pct}%)</span>
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+        ${subs.map(st=>`
+          <div class="subtask-item ${st.done?'done':''}">
+            <input type="checkbox" ${st.done?'checked':''} data-action="toggle-subtask" data-id="${escapeHtml(task.id)}" data-sub="${escapeHtml(st.id)}">
+            <span style="flex:1;">${escapeHtml(st.title)}</span>
+            <button class="ws-icon-btn del" style="width:24px;height:24px;font-size:12px;" data-action="delete-subtask" data-id="${escapeHtml(task.id)}" data-sub="${escapeHtml(st.id)}">✕</button>
+          </div>
+        `).join('')}
+      `:''}
+      <div class="subtask-add-row">
+        <input type="text" class="ws-input subtask-input" id="sub-input-${escapeHtml(task.id)}" data-id="${escapeHtml(task.id)}" placeholder="${lang==='zh'?'新增子任務...':'Add subtask...'}" style="padding:6px 10px;font-size:12.5px;">
+        <button type="button" class="ws-btn ws-btn-secondary ws-btn-sm" data-action="add-subtask" data-id="${escapeHtml(task.id)}">＋</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderTasks(){
+  updateCategoryDropdown();
+  renderTop3();
+  const doneCount=state.tasks.filter(t=>t.completed).length;
+  const activeCount=state.tasks.length-doneCount;
+  document.getElementById('cardTasksValue').textContent=`${doneCount} / ${state.tasks.length} ${I18N[lang].done}`;
+  document.getElementById('tabTasksBadge').textContent=activeCount;
+  document.getElementById('taskSummaryText').textContent=lang==='zh'
+    ?`共 ${state.tasks.length} 項 · ${activeCount} 項進行中`
+    :`${state.tasks.length} total · ${activeCount} active`;
+
+  const list=document.getElementById('taskList');
+  const filtered=state.tasks.filter(t=>{
+    if(currentFilter==='active'&&t.completed)return false;
+    if(currentFilter==='completed'&&!t.completed)return false;
+    if(currentCatFilter!=='all'&&t.category!==currentCatFilter)return false;
+    return true;
+  });
+  if(filtered.length===0){
+    list.innerHTML=`<div class="empty-state">${lang==='zh'?'目前沒有符合條件的任務 ✨':'No tasks match the current filter ✨'}</div>`;
+    return;
+  }
+  list.innerHTML=filtered.map(renderTaskItemHTML).join('');
+}
+
+function toggleTaskById(id){
+  const t=state.tasks.find(x=>x.id===id);
+  if(!t)return;
+  t.completed=!t.completed;
+  if(t.completed){
+    state.stats.totalTasksCompleted+=1;
+    addRewards(20,10,lang==='zh'?'完成任務！':'Task completed!');
+  }else{
+    saveState();
+  }
+  renderTasks();
+  renderCalendar();
+}
+
+function deleteTaskById(id){
+  state.tasks=state.tasks.filter(x=>x.id!==id);
+  state.top3.ids=state.top3.ids.filter(x=>x!==id);
+  saveState();
+  renderTasks();
+  renderCalendar();
+  renderGamifyHeader();
+}
+
+function addSubtask(taskId){
+  const inp=document.getElementById(`sub-input-${taskId}`);
+  const val=inp?inp.value.trim():'';
+  if(!val)return;
+  const t=state.tasks.find(x=>x.id===taskId);
+  if(!t)return;
+  t.subtasks=t.subtasks||[];
+  t.subtasks.push({id:'st_'+Date.now(),title:val,done:false});
+  saveState();
+  renderTasks();
+  renderCalendar();
+}
+
+function toggleSubtask(taskId,subId){
+  const t=state.tasks.find(x=>x.id===taskId);
+  if(!t)return;
+  const st=(t.subtasks||[]).find(s=>s.id===subId);
+  if(!st)return;
+  st.done=!st.done;
+  if(st.done)addRewards(5,2,lang==='zh'?'完成子任務':'Subtask done');
+  else saveState();
+  renderTasks();
+  renderCalendar();
+}
+
+function deleteSubtask(taskId,subId){
+  const t=state.tasks.find(x=>x.id===taskId);
+  if(!t)return;
+  t.subtasks=(t.subtasks||[]).filter(s=>s.id!==subId);
+  saveState();
+  renderTasks();
+  renderCalendar();
+}
+
+function openEditTask(id){
+  const t=state.tasks.find(x=>x.id===id);
+  if(!t)return;
+  document.getElementById('editTaskId').value=t.id;
+  document.getElementById('editTaskTitle').value=t.title;
+  document.getElementById('editTaskPriority').value=t.priority;
+  document.getElementById('editTaskCategory').value=t.category||'';
+  document.getElementById('editTaskDue').value=t.dueDate||'';
+  openModal('editTaskModal');
+}
+
+document.getElementById('addTaskForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const title=document.getElementById('taskTitleInput').value.trim();
+  if(!title)return;
+  state.tasks.unshift({
+    id:'t_'+Date.now(),
+    title,
+    priority:document.getElementById('taskPriorityInput').value,
+    category:document.getElementById('taskCategoryInput').value.trim()||'一般',
+    dueDate:document.getElementById('taskDueInput').value||'',
+    completed:false,
+    subtasks:[]
+  });
+  document.getElementById('taskTitleInput').value='';
+  saveState();
+  renderTasks();
+  renderCalendar();
+  showToast(lang==='zh'?'已新增任務':'Task added');
+});
+
+document.getElementById('taskFilterGroup').addEventListener('click',e=>{
+  const btn=e.target.closest('.filter-pill');
+  if(!btn)return;
+  document.querySelectorAll('#taskFilterGroup .filter-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentFilter=btn.dataset.filter;
+  renderTasks();
+});
+
+document.getElementById('taskCategoryFilter').addEventListener('change',e=>{
+  currentCatFilter=e.target.value;
+  renderTasks();
+});
+
+document.getElementById('clearCompletedBtn').addEventListener('click',()=>{
+  const before=state.tasks.length;
+  state.tasks=state.tasks.filter(t=>!t.completed);
+  state.top3.ids=state.top3.ids.filter(id=>state.tasks.some(t=>t.id===id));
+  if(state.tasks.length<before){
+    saveState();
+    renderTasks();
+    renderCalendar();
+    renderGamifyHeader();
+    showToast(lang==='zh'?`已清除 ${before-state.tasks.length} 項已完成任務`:`Cleared ${before-state.tasks.length} completed tasks`);
+  }
+});
+
+document.getElementById('editTaskForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const id=document.getElementById('editTaskId').value;
+  const t=state.tasks.find(x=>x.id===id);
+  if(!t)return;
+  t.title=document.getElementById('editTaskTitle').value.trim();
+  t.priority=document.getElementById('editTaskPriority').value;
+  t.category=document.getElementById('editTaskCategory').value.trim()||'一般';
+  t.dueDate=document.getElementById('editTaskDue').value;
+  saveState();
+  closeModal('editTaskModal');
+  renderTasks();
+  renderCalendar();
+  showToast(lang==='zh'?'已更新任務':'Task updated');
+});
+
+/* Delegated events for Tasks, Top3, Calendar */
+document.getElementById('workspaceSection').addEventListener('click',e=>{
+  const actEl=e.target.closest('[data-action]');
+  if(actEl){
+    const act=actEl.dataset.action;
+    const id=actEl.dataset.id;
+    const sub=actEl.dataset.sub;
+    if(act==='toggle-task')toggleTaskById(id);
+    else if(act==='edit-task')openEditTask(id);
+    else if(act==='delete-task')deleteTaskById(id);
+    else if(act==='add-subtask')addSubtask(id);
+    else if(act==='delete-subtask')deleteSubtask(id,sub);
+    return;
+  }
+  const calEl=e.target.closest('[data-cal-date]');
+  if(calEl){
+    selectedDateStr=calEl.dataset.calDate;
+    renderCalendar();
+  }
+});
+
+document.getElementById('workspaceSection').addEventListener('change',e=>{
+  const cb=e.target.closest('[data-action="toggle-subtask"]');
+  if(cb)toggleSubtask(cb.dataset.id,cb.dataset.sub);
+});
+
+document.getElementById('workspaceSection').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.classList.contains('subtask-input')){
+    e.preventDefault();
+    addSubtask(e.target.dataset.id);
+  }
+});
+
+/* ================== CALENDAR ================== */
+let calDate=new Date();
+let selectedDateStr=todayStr();
+
+function renderCalendar(){
+  const y=calDate.getFullYear();
+  const m=calDate.getMonth();
+  const monthNamesEn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('calMonthLabel').textContent=lang==='zh'?`${y} 年 ${m+1} 月`:`${monthNamesEn[m]} ${y}`;
+
+  const firstDay=new Date(y,m,1).getDay();
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const prevDays=new Date(y,m,0).getDate();
+  const today=todayStr();
+
+  const dows=lang==='zh'?['日','一','二','三','四','五','六']:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+
+  for(let i=firstDay-1;i>=0;i--){
+    html+=`<div class="cal-cell other-month"><div class="cal-day-num">${prevDays-i}</div></div>`;
+  }
+  for(let day=1;day<=daysInMonth;day++){
+    const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dayTasks=state.tasks.filter(t=>t.dueDate===ds);
+    const cls=['cal-cell'];
+    if(ds===today)cls.push('today');
+    if(ds===selectedDateStr)cls.push('selected');
+    html+=`<div class="${cls.join(' ')}" data-cal-date="${ds}">
+      <div class="cal-day-num">${day}</div>
+      <div class="cal-dots">${dayTasks.length?`<span class="cal-count">${dayTasks.length}${lang==='zh'?' 項':''}</span>`:''}</div>
+    </div>`;
+  }
+  document.getElementById('calGrid').innerHTML=html;
+  renderSelectedDateTasks();
+}
+
+function renderSelectedDateTasks(){
+  document.getElementById('calSelectedDateTitle').textContent=lang==='zh'?`📅 ${selectedDateStr} 的待辦事項`:`📅 Tasks for ${selectedDateStr}`;
+  const dayTasks=state.tasks.filter(t=>t.dueDate===selectedDateStr);
+  const list=document.getElementById('calTaskList');
+  if(dayTasks.length===0){
+    list.innerHTML=`<div class="empty-state">${lang==='zh'?'這一天目前沒有安排任務':'No tasks scheduled for this date'}</div>`;
+    return;
+  }
+  list.innerHTML=dayTasks.map(renderTaskItemHTML).join('');
+}
+
+document.getElementById('calPrevBtn').addEventListener('click',()=>{calDate.setMonth(calDate.getMonth()-1);renderCalendar();});
+document.getElementById('calNextBtn').addEventListener('click',()=>{calDate.setMonth(calDate.getMonth()+1);renderCalendar();});
+document.getElementById('calTodayBtn').addEventListener('click',()=>{calDate=new Date();selectedDateStr=todayStr();renderCalendar();});
+
+document.getElementById('calAddTaskForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const title=document.getElementById('calTaskTitle').value.trim();
+  if(!title)return;
+  state.tasks.unshift({
+    id:'t_'+Date.now(),
+    title,
+    priority:document.getElementById('calTaskPriority').value,
+    category:'排程',
+    dueDate:selectedDateStr,
+    completed:false,
+    subtasks:[]
+  });
+  document.getElementById('calTaskTitle').value='';
+  saveState();
+  renderTasks();
+  renderCalendar();
+  showToast(lang==='zh'?`已於 ${selectedDateStr} 新增任務`:`Added task for ${selectedDateStr}`);
+});
+
+/* ================== VOCABULARY ================== */
+let currentVocabIdx=0;
+
+function pickNextVocab(){
+  if(state.vocab.length===0)return;
+  const isRandom=document.getElementById('fcRandomToggle').checked;
+  if(!isRandom){
+    currentVocabIdx=(currentVocabIdx+1)%state.vocab.length;
+  }else{
+    const totalWeight=state.vocab.reduce((acc,v)=>acc+(v.weight||3),0);
+    let r=Math.random()*totalWeight;
+    let chosen=0;
+    for(let i=0;i<state.vocab.length;i++){
+      r-=(state.vocab[i].weight||3);
+      if(r<=0){chosen=i;break;}
+    }
+    if(state.vocab.length>1&&chosen===currentVocabIdx)chosen=(chosen+1)%state.vocab.length;
+    currentVocabIdx=chosen;
+  }
+  renderFlashcard();
+}
+
+function renderFlashcard(){
+  const v=state.vocab[currentVocabIdx];
+  if(!v)return;
+  document.getElementById('fcWord').textContent=v.word;
+  document.getElementById('fcPhonetic').textContent=`${v.phonetic||''}  ${v.pos}`;
+  document.getElementById('fcMeaning').textContent=v.meaning;
+  document.getElementById('fcExample').textContent=`"${v.example}"`;
+  document.getElementById('fcRevealBox').style.display='none';
+  document.getElementById('fcRevealBtn').style.display='inline-flex';
+  const statusMap=lang==='zh'
+    ?{mastered:'<span class="badge badge-low">✅ 已熟記</span>',review:'<span class="badge badge-high">🔁 需複習</span>',new:'<span class="badge badge-cat">✨ 新單字</span>'}
+    :{mastered:'<span class="badge badge-low">✅ Mastered</span>',review:'<span class="badge badge-high">🔁 Review</span>',new:'<span class="badge badge-cat">✨ New</span>'};
+  document.getElementById('fcStatusBadge').innerHTML=statusMap[v.status]||statusMap.new;
+  renderVocabStats();
+}
+
+function renderVocabStats(){
+  document.getElementById('vocabTotalStat').textContent=state.vocab.length;
+  document.getElementById('vocabMasteredStat').textContent=state.vocab.filter(v=>v.status==='mastered').length;
+  document.getElementById('vocabReviewStat').textContent=state.vocab.filter(v=>v.status==='review').length;
+}
+
+function renderVocabList(){
+  const q=document.getElementById('vocabSearchInput').value.trim().toLowerCase();
+  const list=document.getElementById('vocabList');
+  const items=state.vocab.filter(v=>!q||v.word.toLowerCase().includes(q)||v.meaning.toLowerCase().includes(q));
+  if(items.length===0){
+    list.innerHTML=`<div class="empty-state">${lang==='zh'?'找不到相符的單字':'No matching words'}</div>`;
+    return;
+  }
+  list.innerHTML=items.map(v=>`
+    <div class="vocab-row">
+      <div>
+        <div style="font-size:15px;">${escapeHtml(v.word)} <span style="font-size:12.5px;color:var(--muted);">${escapeHtml(v.phonetic||'')} ${escapeHtml(v.pos)}</span></div>
+        <div style="font-size:13.5px;margin-top:2px;">${escapeHtml(v.meaning)}</div>
+        <div style="font-size:12px;color:var(--muted);font-style:italic;margin-top:2px;">${escapeHtml(v.example)}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+        <span class="badge ${v.status==='mastered'?'badge-low':v.status==='review'?'badge-high':'badge-cat'}">
+          ${v.status==='mastered'?(lang==='zh'?'已熟記':'Mastered'):v.status==='review'?(lang==='zh'?'需複習':'Review'):(lang==='zh'?'新單字':'New')}
+        </span>
+      </div>
+    </div>
+  `).join('');
+}
+
+document.getElementById('fcRevealBtn').addEventListener('click',()=>{
+  document.getElementById('fcRevealBox').style.display='block';
+  document.getElementById('fcRevealBtn').style.display='none';
+});
+document.getElementById('fcNextBtn').addEventListener('click',pickNextVocab);
+document.getElementById('fcReviewBtn').addEventListener('click',()=>{
+  const v=state.vocab[currentVocabIdx];if(!v)return;
+  v.status='review';v.weight=7;state.daily.vocabReviewed+=1;
+  addRewards(5,2,lang==='zh'?`已標記「${v.word}」需加強複習`:`Marked "${v.word}" for review`);
+  renderVocabList();pickNextVocab();
+});
+document.getElementById('fcMasterBtn').addEventListener('click',()=>{
+  const v=state.vocab[currentVocabIdx];if(!v)return;
+  v.status='mastered';v.weight=1;state.daily.vocabReviewed+=1;
+  addRewards(10,5,lang==='zh'?`已熟記「${v.word}」！`:`Mastered "${v.word}"!`);
+  renderVocabList();pickNextVocab();
+});
+document.getElementById('toggleAddVocabBtn').addEventListener('click',()=>{
+  const f=document.getElementById('addVocabForm');
+  f.style.display=f.style.display==='none'?'flex':'none';
+});
+document.getElementById('addVocabForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const word=document.getElementById('vWord').value.trim();
+  const phonetic=document.getElementById('vPhonetic').value.trim();
+  const pos=document.getElementById('vPos').value.trim();
+  const meaning=document.getElementById('vMeaning').value.trim();
+  const example=document.getElementById('vExample').value.trim();
+  if(!word||!meaning)return;
+  state.vocab.unshift({id:'v_'+Date.now(),word,phonetic,pos,meaning,example,status:'new',weight:4});
+  e.target.reset();e.target.style.display='none';
+  saveState();renderVocabStats();renderVocabList();
+  showToast(lang==='zh'?`已新增單字「${word}」至記憶庫`:`Added "${word}" to word bank`);
+});
+document.getElementById('vocabSearchInput').addEventListener('input',renderVocabList);
+
+/* ================== UNIFIED POMODORO & WHITE NOISE ================== */
+let pomoMode='focus';
+let pomoTotalSec=state.pomoSettings.focusMins*60;
+let pomoLeftSec=pomoTotalSec;
+let pomoInterval=null;
+const RING_CIRC=2*Math.PI*98;
+
+document.getElementById('pomoFocusMins').value=state.pomoSettings.focusMins;
+document.getElementById('pomoBreakMins').value=state.pomoSettings.breakMins;
+
+let sharedAudioCtx=null;
+function getAudioCtx(){
+  if(!sharedAudioCtx)sharedAudioCtx=new(window.AudioContext||window.webkitAudioContext)();
+  if(sharedAudioCtx.state==='suspended')sharedAudioCtx.resume();
+  return sharedAudioCtx;
+}
+
+function playChime(){
+  try{
+    const ctx=getAudioCtx();
+    const osc=ctx.createOscillator();
+    const gain=ctx.createGain();
+    osc.type='sine';
+    osc.frequency.setValueAtTime(528,ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(880,ctx.currentTime+0.3);
+    gain.gain.setValueAtTime(0.25,ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.0);
+    osc.connect(gain);gain.connect(ctx.destination);
+    osc.start();osc.stop(ctx.currentTime+1.0);
+  }catch{}
+}
+
+function renderPomo(){
+  const m=String(Math.floor(pomoLeftSec/60)).padStart(2,'0');
+  const s=String(pomoLeftSec%60).padStart(2,'0');
+  const timeStr=`${m}:${s}`;
+  document.getElementById('pomoDigits').textContent=timeStr;
+  document.getElementById('cardTimerValue').textContent=timeStr;
+  document.getElementById('pomoModeLabel').textContent=pomoMode==='focus'?I18N[lang].pomoFocusMode:I18N[lang].pomoBreakMode;
+  document.getElementById('cardTimerLabel').textContent=pomoMode==='focus'?I18N[lang].cardTimerLabel:I18N[lang].cardTimerBreak;
+
+  const progress=pomoTotalSec>0?(1-pomoLeftSec/pomoTotalSec):0;
+  const circle=document.getElementById('pomoProgressCircle');
+  circle.style.strokeDashoffset=RING_CIRC*progress;
+  circle.style.stroke=pomoMode==='focus'?'var(--accent)':'var(--green)';
+
+  const badge=document.getElementById('timerBadge');
+  const startBtn=document.getElementById('pomoStartBtn');
+  if(pomoInterval){
+    badge.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>';
+    startBtn.textContent=lang==='zh'?'⏸ 暫停':'⏸ Pause';
+  }else{
+    badge.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+    startBtn.textContent=(pomoLeftSec<pomoTotalSec)?(lang==='zh'?'▶ 繼續':'▶ Resume'):(lang==='zh'?'▶ 開始':'▶ Start');
+  }
+}
+
+function setPomoMode(mode){
+  clearInterval(pomoInterval);
+  pomoInterval=null;
+  pomoMode=mode;
+  pomoTotalSec=(mode==='focus'?state.pomoSettings.focusMins:state.pomoSettings.breakMins)*60;
+  pomoLeftSec=pomoTotalSec;
+  document.getElementById('pomoFocusModeBtn').classList.toggle('active',mode==='focus');
+  document.getElementById('pomoBreakModeBtn').classList.toggle('active',mode==='break');
+  renderPomo();
+}
+
+function togglePomoTimer(){
+  if(pomoInterval){
+    clearInterval(pomoInterval);
+    pomoInterval=null;
+    renderPomo();
+    return;
+  }
+  pomoInterval=setInterval(()=>{
+    pomoLeftSec--;
+    if(pomoLeftSec<=0){
+      clearInterval(pomoInterval);
+      pomoInterval=null;
+      playChime();
+      if(pomoMode==='focus'){
+        state.stats.totalPomodoros+=1;
+        state.daily.pomodoros+=1;
+        addRewards(35,20,lang==='zh'?'🍅 完成一個番茄鐘專注！':'🍅 Pomodoro focus complete!');
+        setPomoMode('break');
+      }else{
+        showToast(lang==='zh'?'☕ 休息結束，準備開始下一輪專注！':'☕ Break over! Ready to focus.');
+        setPomoMode('focus');
+      }
+      return;
+    }
+    renderPomo();
+  },1000);
+  renderPomo();
+}
+
+document.getElementById('pomoFocusModeBtn').addEventListener('click',()=>setPomoMode('focus'));
+document.getElementById('pomoBreakModeBtn').addEventListener('click',()=>setPomoMode('break'));
+document.getElementById('pomoStartBtn').addEventListener('click',togglePomoTimer);
+document.getElementById('cardTimerTrigger').addEventListener('click',togglePomoTimer);
+document.getElementById('pomoResetBtn').addEventListener('click',()=>setPomoMode(pomoMode));
+document.getElementById('pomoApplyMinsBtn').addEventListener('click',()=>{
+  const f=Math.max(1,Math.min(120,parseInt(document.getElementById('pomoFocusMins').value,10)||25));
+  const b=Math.max(1,Math.min(60,parseInt(document.getElementById('pomoBreakMins').value,10)||5));
+  state.pomoSettings={focusMins:f,breakMins:b};
+  saveState();
+  setPomoMode(pomoMode);
+  showToast(lang==='zh'?`已更新番茄鐘：專注 ${f} 分 / 休息 ${b} 分`:`Timer updated: ${f}m focus / ${b}m break`);
+});
+
+/* White Noise (Web Audio API) */
+const activeNoises={};
+function createNoiseBuffer(ctx,type){
+  const bufferSize=ctx.sampleRate*3;
+  const buffer=ctx.createBuffer(1,bufferSize,ctx.sampleRate);
+  const data=buffer.getChannelData(0);
+  if(type==='pink'){
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for(let i=0;i<bufferSize;i++){
+      const w=Math.random()*2-1;
+      b0=0.99886*b0+w*0.0555179;b1=0.99332*b1+w*0.0750759;
+      b2=0.96900*b2+w*0.1538520;b3=0.86650*b3+w*0.3104856;
+      b4=0.55000*b4+w*0.5329522;b5=-0.7616*b5-w*0.0168980;
+      data[i]=(b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.04;
+      b6=w*0.115926;
+    }
+  }else{
+    let lastOut=0;
+    for(let i=0;i<bufferSize;i++){
+      const w=Math.random()*2-1;
+      data[i]=(lastOut+0.02*w)/1.02;
+      lastOut=data[i];
+      data[i]*=2.5;
+    }
+  }
+  return buffer;
+}
+function startNoise(kind,vol){
+  const ctx=getAudioCtx();
+  const src=ctx.createBufferSource();
+  src.loop=true;
+  const gain=ctx.createGain();
+  gain.gain.value=vol;
+  const extraNodes=[];
+  if(kind==='rain'){
+    src.buffer=createNoiseBuffer(ctx,'pink');
+    const filter=ctx.createBiquadFilter();
+    filter.type='lowpass';filter.frequency.value=1400;
+    src.connect(filter);filter.connect(gain);extraNodes.push(filter);
+  }else if(kind==='cafe'){
+    src.buffer=createNoiseBuffer(ctx,'brown');
+    const filter=ctx.createBiquadFilter();
+    filter.type='bandpass';filter.frequency.value=420;filter.Q.value=0.7;
+    src.connect(filter);filter.connect(gain);extraNodes.push(filter);
+  }else if(kind==='forest'){
+    src.buffer=createNoiseBuffer(ctx,'pink');
+    const filter=ctx.createBiquadFilter();
+    filter.type='bandpass';filter.frequency.value=600;filter.Q.value=1.4;
+    const lfo=ctx.createOscillator();
+    const lfoGain=ctx.createGain();
+    lfo.frequency.value=0.18;lfoGain.gain.value=280;
+    lfo.connect(lfoGain);lfoGain.connect(filter.frequency);lfo.start();
+    src.connect(filter);filter.connect(gain);extraNodes.push(filter,lfo,lfoGain);
+  }
+  gain.connect(ctx.destination);
+  src.start();
+  activeNoises[kind]={src,gain,extraNodes};
+}
+function stopNoise(kind){
+  const n=activeNoises[kind];
+  if(!n)return;
+  try{n.src.stop();}catch{}
+  n.extraNodes.forEach(node=>{try{if(node.stop)node.stop();}catch{}});
+  delete activeNoises[kind];
+}
+document.querySelectorAll('.noise-toggle').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const kind=btn.dataset.noise;
+    const card=document.getElementById(`noise-${kind}`);
+    const slider=card.querySelector('.noise-slider');
+    if(activeNoises[kind]){
+      stopNoise(kind);
+      btn.textContent=lang==='zh'?'▶ 播放':'▶ Play';
+      card.classList.remove('playing');
+    }else{
+      startNoise(kind,parseFloat(slider.value));
+      btn.textContent=lang==='zh'?'⏸ 停止':'⏸ Stop';
+      card.classList.add('playing');
+    }
+  });
+});
+document.querySelectorAll('.noise-slider').forEach(slider=>{
+  slider.addEventListener('input',()=>{
+    const kind=slider.dataset.noise;
+    if(activeNoises[kind])activeNoises[kind].gain.gain.value=parseFloat(slider.value);
+  });
+});
+document.getElementById('stopAllNoiseBtn').addEventListener('click',()=>{
+  ['rain','cafe','forest'].forEach(k=>{
+    stopNoise(k);
+    const card=document.getElementById(`noise-${k}`);
+    card.classList.remove('playing');
+    card.querySelector('.noise-toggle').textContent=lang==='zh'?'▶ 播放':'▶ Play';
+  });
+});
+
+/* ================== MODALS: MORNING, EVENING, COMMAND ================== */
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+document.querySelectorAll('[data-close-modal]').forEach(btn=>{
+  btn.addEventListener('click',()=>closeModal(btn.dataset.closeModal));
+});
+document.querySelectorAll('.modal-backdrop').forEach(bd=>{
+  bd.addEventListener('click',e=>{if(e.target===bd)bd.classList.remove('open');});
+});
+
+function openMorningModal(){
+  const picker=document.getElementById('morningTaskPicker');
+  const activeTasks=state.tasks.filter(t=>!t.completed);
+  if(activeTasks.length===0){
+    picker.innerHTML=`<div class="empty-state">${lang==='zh'?'目前沒有進行中的任務，請先新增任務！':'No active tasks yet. Add a task first!'}</div>`;
+  }else{
+    picker.innerHTML=activeTasks.map(t=>{
+      const checked=state.top3.ids.includes(t.id);
+      const pTxt=t.priority==='high'?(lang==='zh'?'高':'H'):t.priority==='medium'?(lang==='zh'?'中':'M'):(lang==='zh'?'低':'L');
+      return `<label style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);background:rgba(255,255,255,.72);border-radius:14px;cursor:pointer;">
+        <input type="checkbox" class="morning-cb" value="${escapeHtml(t.id)}" ${checked?'checked':''} style="accent-color:var(--accent);width:16px;height:16px;">
+        <span style="flex:1;font-size:14px;">${escapeHtml(t.title)}</span>
+        <span class="badge badge-${t.priority}">${pTxt}</span>
+      </label>`;
+    }).join('');
+  }
+  state.daily.morningPrompted=true;
+  saveState();
+  renderGamifyHeader();
+  openModal('morningModal');
+}
+
+document.getElementById('openMorningBtn').addEventListener('click',openMorningModal);
+document.getElementById('editTop3Btn').addEventListener('click',openMorningModal);
+document.getElementById('saveMorningTop3Btn').addEventListener('click',()=>{
+  const selected=[...document.querySelectorAll('.morning-cb:checked')].map(cb=>cb.value);
+  if(selected.length>3){
+    showToast(lang==='zh'?'⚠️ 最多只能挑選 3 件最重要的事！':'⚠️ Select up to 3 tasks only!');
+    return;
+  }
+  state.top3={date:todayStr(),ids:selected};
+  state.stats.morningPlansDone+=1;
+  checkAchievements();
+  saveState();
+  closeModal('morningModal');
+  renderTasks();
+  renderGamifyHeader();
+  renderAchievements();
+  showToast(lang==='zh'?'☀️ 已鎖定今日 Top 3 重點任務！':'☀️ Locked today’s Top 3 priorities!');
+});
+
+function openEveningModal(){
+  const today=todayStr();
+  const todayTasks=state.tasks.filter(t=>t.dueDate===today);
+  const doneToday=todayTasks.filter(t=>t.completed).length;
+  const rate=todayTasks.length?Math.round((doneToday/todayTasks.length)*100):0;
+  document.getElementById('evRate').textContent=`${rate}%`;
+  document.getElementById('evExp').textContent=`+${state.daily.expEarned}`;
+  document.getElementById('evVocab').textContent=state.daily.vocabReviewed;
+
+  const unfinished=state.tasks.filter(t=>!t.completed&&t.dueDate&&t.dueDate<=today);
+  const list=document.getElementById('evUnfinishedList');
+  if(unfinished.length===0){
+    list.innerHTML=`<div style="padding:12px;text-align:center;color:var(--green);font-size:14px;">${lang==='zh'?'🎉 今日任務已全數完成，太棒了！':'🎉 All tasks for today are complete!'}</div>`;
+  }else{
+    list.innerHTML=unfinished.map(t=>`
+      <div style="padding:9px 12px;background:rgba(31,35,40,.04);border-radius:12px;font-size:13.5px;display:flex;justify-content:space-between;gap:8px;">
+        <span>${escapeHtml(t.title)}</span>
+        <span style="color:var(--muted);font-size:12px;">${escapeHtml(t.dueDate)}</span>
+      </div>
+    `).join('');
+  }
+  openModal('eveningModal');
+}
+
+document.getElementById('openEveningBtn').addEventListener('click',openEveningModal);
+document.getElementById('rolloverTomorrowBtn').addEventListener('click',()=>{
+  const today=todayStr();
+  const tmr=tomorrowStr();
+  let count=0;
+  state.tasks.forEach(t=>{
+    if(!t.completed&&t.dueDate&&t.dueDate<=today){t.dueDate=tmr;count++;}
+  });
+  saveState();
+  renderTasks();
+  renderCalendar();
+  openEveningModal();
+  showToast(count>0?(lang==='zh'?`⏭️ 已將 ${count} 項未完成任務順延至明天 (${tmr})`:`⏭️ Moved ${count} tasks to ${tmr}`):(lang==='zh'?'沒有需要順延的任務':'Nothing to rollover'));
+});
+document.getElementById('completeEveningBtn').addEventListener('click',()=>{
+  state.stats.eveningReviewsDone+=1;
+  addRewards(15,10,lang==='zh'?'🌙 完成晚間回顧儀式':'🌙 Evening review complete');
+  closeModal('eveningModal');
+});
+
 function openSearch(){
   const cmds=[
+    {k:'tasks',label:lang==='zh'?'前往待辦清單與 Top 3':'Open Tasks & Top 3'},
+    {k:'calendar',label:lang==='zh'?'開啟日曆規劃':'Open Calendar Planner'},
     {k:'draw',label:lang==='zh'?'開啟 6 科溫習抽籤':'Open 6-Subject Study Draw'},
-    {k:'timer',label:lang==='zh'?'開始 / 暫停專注計時':'Toggle Focus Timer'},
-    {k:'tasks',label:lang==='zh'?'查看今日待辦清單':'Open Today Tasks'},
+    {k:'vocab',label:lang==='zh'?'開啟高階單字 Flashcard':'Open Vocabulary Flashcards'},
+    {k:'focus',label:lang==='zh'?'開啟番茄鐘與白噪音':'Open Pomodoro & White Noise'},
+    {k:'morning',label:lang==='zh'?'☀️ 晨間規劃：鎖定 Top 3':'☀️ Morning Plan: Lock Top 3'},
+    {k:'evening',label:lang==='zh'?'🌙 晚間回顧儀式':'🌙 Evening Review'},
     {k:'lang',label:lang==='zh'?'切換語言 (中 / EN)':'Switch Language (中 / EN)'}
   ];
   const q=document.getElementById('cmdInput').value.toLowerCase();
   document.getElementById('cmdList').innerHTML=cmds.filter(c=>c.label.toLowerCase().includes(q)).map(c=>`
     <button class="cmd-item" data-cmd="${c.k}"><span>${c.label}</span><span class="kbd">Enter</span></button>`).join('');
-  document.getElementById('searchModal').classList.add('open');
+  openModal('searchModal');
 }
 
+/* ================== NAVIGATION & TOPBAR LISTENERS ================== */
 document.getElementById('langBtn').onclick=()=>{lang=lang==='zh'?'en':'zh';localStorage.setItem('wesley_lang',lang);applyLang();};
 document.querySelectorAll('#accentBar .dot[data-color]').forEach(d=>d.onclick=()=>applyAccent(d.dataset.color));
 document.getElementById('customColorInput').oninput=e=>applyAccent(e.target.value);
-document.getElementById('cardDrawTrigger').onclick=()=>document.getElementById('drawPanel').classList.toggle('open');
+document.getElementById('cardDrawTrigger').onclick=()=>{
+  const dp=document.getElementById('drawPanel');
+  dp.classList.toggle('open');
+  if(dp.classList.contains('open'))dp.scrollIntoView({behavior:'smooth',block:'nearest'});
+};
 document.getElementById('closeDrawBtn').onclick=()=>document.getElementById('drawPanel').classList.remove('open');
 document.getElementById('startDrawBtn').onclick=runDraw;
 document.getElementById('resetDrawBtn').onclick=()=>{usedIds=[];localStorage.setItem('wesley_used','[]');renderDrawState();};
@@ -1106,31 +2945,30 @@ document.querySelectorAll('#datasetSwitch .seg-btn').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('#datasetSwitch .seg-btn').forEach(x=>x.classList.toggle('active',x.dataset.ds===dsMode));
   renderChart();
 });
-document.getElementById('cardTimerTrigger').onclick=toggleTimer;
 document.getElementById('cardWaterTrigger').onclick=()=>{water=water>=8?0:water+1;localStorage.setItem('wesley_water',water);renderWater();};
-document.getElementById('cardTasksTrigger').onclick=()=>document.getElementById('tasksModal').classList.add('open');
-document.getElementById('closeTasksBtn').onclick=()=>document.getElementById('tasksModal').classList.remove('open');
-document.getElementById('todoList').onclick=e=>{
-  const r=e.target.closest('.todo-row');if(!r)return;
-  const id=Number(r.dataset.tid);
-  todos=todos.map(x=>x.id===id?{...x,d:!x.d}:x);
-  localStorage.setItem('wesley_todos',JSON.stringify(todos));
-  renderTasksCard();
+document.getElementById('cardTasksTrigger').onclick=()=>{
+  switchWorkspaceTab('tasks',true);
+  setTimeout(()=>document.getElementById('taskTitleInput')?.focus({preventScroll:true}),380);
 };
 document.getElementById('searchBtn').onclick=()=>{document.getElementById('cmdInput').value='';openSearch();document.getElementById('cmdInput').focus();};
-document.getElementById('closeSearchBtn').onclick=()=>document.getElementById('searchModal').classList.remove('open');
+document.getElementById('closeSearchBtn').onclick=()=>closeModal('searchModal');
 document.getElementById('cmdInput').oninput=openSearch;
 document.getElementById('cmdList').onclick=e=>{
   const b=e.target.closest('.cmd-item');if(!b)return;
-  document.getElementById('searchModal').classList.remove('open');
-  if(b.dataset.cmd==='draw')document.getElementById('drawPanel').classList.add('open');
-  if(b.dataset.cmd==='timer')toggleTimer();
-  if(b.dataset.cmd==='tasks')document.getElementById('tasksModal').classList.add('open');
-  if(b.dataset.cmd==='lang'){lang=lang==='zh'?'en':'zh';localStorage.setItem('wesley_lang',lang);applyLang();}
+  closeModal('searchModal');
+  const cmd=b.dataset.cmd;
+  if(cmd==='draw'){document.getElementById('drawPanel').classList.add('open');document.getElementById('drawPanel').scrollIntoView({behavior:'smooth'});}
+  else if(['tasks','calendar','vocab','focus'].includes(cmd))switchWorkspaceTab(cmd,true);
+  else if(cmd==='morning')openMorningModal();
+  else if(cmd==='evening')openEveningModal();
+  else if(cmd==='lang'){lang=lang==='zh'?'en':'zh';localStorage.setItem('wesley_lang',lang);applyLang();}
 };
+
 window.addEventListener('keydown',e=>{
   if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();document.getElementById('cmdInput').value='';openSearch();document.getElementById('cmdInput').focus();}
-  if(e.key==='Escape'){document.getElementById('searchModal').classList.remove('open');document.getElementById('tasksModal').classList.remove('open');}
+  if(e.key==='Escape'){
+    ['searchModal','morningModal','eveningModal','editTaskModal'].forEach(closeModal);
+  }
 });
 
 const toggleDrawer=open=>{
@@ -1143,18 +2981,37 @@ document.querySelectorAll('[data-nav]').forEach(btn=>btn.onclick=()=>{
   const n=btn.dataset.nav;
   document.querySelectorAll('[data-nav]').forEach(x=>x.classList.toggle('active',x.dataset.nav===n));
   toggleDrawer(false);
-  if(n==='draw'){document.getElementById('drawPanel').classList.add('open');document.getElementById('drawPanel').scrollIntoView({behavior:'smooth'});}
-  if(n==='focus')toggleTimer();
-  if(n==='tasks')document.getElementById('tasksModal').classList.add('open');
-  if(n==='stats')document.getElementById('statsSection').scrollIntoView({behavior:'smooth'});
   if(n==='home')window.scrollTo({top:0,behavior:'smooth'});
+  else if(n==='draw'){document.getElementById('drawPanel').classList.add('open');document.getElementById('drawPanel').scrollIntoView({behavior:'smooth'});}
+  else if(n==='tasks')switchWorkspaceTab('tasks',true);
+  else if(n==='calendar')switchWorkspaceTab('calendar',true);
+  else if(n==='vocab')switchWorkspaceTab('vocab',true);
+  else if(n==='focus')switchWorkspaceTab('focus',true);
+  else if(n==='stats')document.getElementById('statsSection').scrollIntoView({behavior:'smooth'});
 });
 
+/* ================== HASH ROUTING & INIT ================== */
+function handleHash(){
+  const h=location.hash.replace('#','');
+  if(['tasks','calendar','vocab','focus','achievements'].includes(h)){
+    switchWorkspaceTab(h,true);
+  }else if(h==='draw'){
+    document.getElementById('drawPanel').classList.add('open');
+    document.getElementById('drawPanel').scrollIntoView({behavior:'smooth'});
+  }else if(h==='stats'){
+    document.getElementById('statsSection').scrollIntoView({behavior:'smooth'});
+  }
+}
+
 applyAccent(accent);
+renderGamifyHeader();
 applyLang();
+renderDist();
 setInterval(updateClock,1000);
+if(location.hash)setTimeout(handleHash,150);
+window.addEventListener('hashchange',handleHash);
 if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js');
 })();
-(function(){const svgs={Chem:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M9 3h6M10 3v5.2L5.2 17.5A2 2 0 0 0 7 20.5h10a2 2 0 0 0 1.8-3L14 8.2V3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.8 15.5h10.4l1.2 2.2a1.4 1.4 0 0 1-1.2 2.1H6.8a1.4 1.4 0 0 1-1.2-2.1l1.2-2.2z" fill="currentColor" fill-opacity=".22"/><circle cx="10.5" cy="14" r="1" fill="currentColor"/><circle cx="13.5" cy="12" r=".9" fill="currentColor"/></svg>',Bio:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M7 3c0 5 10 4 10 9s-10 4-10 9M17 3c0 5-10 4-10 9s10 4 10 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M8.5 6h7M9 9h6M9 15h6M8.5 18h7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/></svg>',Eng:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M2 5.5A2.5 2.5 0 0 1 4.5 3H12v16H4.5A2.5 2.5 0 0 0 2 21V5.5z" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M22 5.5A2.5 2.5 0 0 0 19.5 3H12v16h7.5a2.5 2.5 0 0 1 2.5 2V5.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16 3v7l1.8-1.4L19.5 10V3" fill="currentColor" fill-opacity=".3" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',Math:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5.5" r="2.2" fill="currentColor" fill-opacity=".22" stroke="currentColor" stroke-width="1.8"/><path d="M10.8 7.5L5.5 20.5M13.2 7.5l5.3 13M7 14.5h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 11.5h6M10.5 11.5v5.5M13.5 11.5v4.5c0 .8.5 1.2 1.2 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".6"/></svg>',ICT:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><rect x="6" y="6" width="12" height="12" rx="3" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8"/><rect x="9.5" y="9.5" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.6"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',Chi:'<svg width="38" height="38" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" fill="currentColor" fill-opacity=".18" stroke="currentColor" stroke-width="1.8"/><path d="M12 6.8v10.4M7.8 9.8h8.4v4.2H7.8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>'};try{if(typeof SUBJECTS!=='undefined'&&Array.isArray(SUBJECTS)){SUBJECTS.forEach(s=>{if(svgs[s.id])s.svg=svgs[s.id];});if(typeof renderSubjects==='function')renderSubjects();}}catch(e){}const fixPicked=()=>{const el=document.getElementById('drawPickedIcon');if(el){el.style.width='92px';el.style.height='92px';el.style.borderRadius='26px';const sv=el.querySelector('svg');if(sv){sv.setAttribute('width','52');sv.setAttribute('height','52');}}};fixPicked();document.querySelectorAll('#cardDrawTrigger .mini-icon svg,#cardTasksTrigger .mini-icon svg,#cardTimerTrigger .mini-icon svg,#cardWaterTrigger .mini-icon svg').forEach(s=>{s.setAttribute('width','30');s.setAttribute('height','30');});const dp=document.getElementById('drawPickedIcon');if(dp)new MutationObserver(fixPicked).observe(dp,{childList:true});const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const syncTodos=()=>{if(typeof todos==='undefined'||!Array.isArray(todos))return;localStorage.setItem('wesley_todos',JSON.stringify(todos));const list=document.getElementById('todoList');const done=todos.filter(x=>x.d).length;if(list)list.innerHTML=todos.map(x=>`<div class="todo-row ${x.d?'done':''}" data-tid="${x.id}"><div class="todo-check">${x.d?'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>':''}</div><span style="flex:1">${esc(x.t)}</span><button class="todo-del" type="button" data-del="${x.id}" aria-label="Delete"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>`).join('');const meta=document.getElementById('todoCountMeta');if(meta)meta.textContent=`${done} / ${todos.length}`;const card=document.getElementById('cardTasksValue');if(card)card.textContent=`${done} / ${todos.length} ${(I18N[lang]||I18N.zh).done}`;};const addTodo=()=>{const inp=document.getElementById('todoInput');if(!inp)return;const v=inp.value.trim();if(!v)return;todos.push({id:Date.now(),t:v,d:false});inp.value='';syncTodos();};document.getElementById('todoAddBtn')?.addEventListener('click',addTodo);document.getElementById('todoInput')?.addEventListener('keydown',e=>{if(e.key==='Enter')addTodo();});document.getElementById('todoClearDoneBtn')?.addEventListener('click',()=>{todos=todos.filter(x=>!x.d);syncTodos();});document.getElementById('todoList')?.addEventListener('click',e=>{const del=e.target.closest('.todo-del');if(del){e.stopPropagation();const id=Number(del.dataset.del);todos=todos.filter(x=>x.id!==id);syncTodos();return;}const row=e.target.closest('.todo-row');if(row){const id=Number(row.dataset.tid);const it=todos.find(x=>x.id===id);if(it){it.d=!it.d;syncTodos();}}});syncTodos()})();</script>
+</script>
 </body>
 </html>
